@@ -1,0 +1,88 @@
+SELECT 
+    u.user_id,
+    u.username,
+    u.email,
+    r.role_name
+FROM 
+    users u
+JOIN 
+    roles r ON u.roles_role_id = r.role_id
+WHERE 
+    u.username = 'user_id'
+    AND u.password = 'user_password';
+	
+INSERT INTO `users` (`username`, `email`, `password`, `roles_role_id`)
+VALUES ('new_username', 'new_email@example.com', SHA2('new_password',256), 1);
+	
+
+INSERT INTO `principals` (`principal_id`, `name`, `email`, `schools_school_id`) VALUES
+(1, 'Principal Smith', 'principal.smith@example.com', 1)
+UPDATE `principals` SET `name` = 'Updated Principal Name', `email` = 'updated.principal@example.com' WHERE `principal_id` = 1;
+DELETE FROM `principals` WHERE `principal_id` = 1;
+
+
+INSERT INTO `parents` (`parent_id`, `name`, `email`, `phone_number`) VALUES
+(1, 'John Doe', 'john.doe@example.com', '123-456-7890')
+UPDATE `parents` SET `name` = 'Updated Parent Name', `phone_number` = '987-654-3210' WHERE `parent_id` = 1;
+DELETE FROM `parents` WHERE `parent_id` = 1;
+
+
+INSERT INTO `schools` (`school_id`, `name`, `address`) VALUES
+(1, 'ABC School', '123 Main St')
+UPDATE `schools` SET `address` = '456 New Address' WHERE `school_id` = 1;
+DELETE FROM `schools` WHERE `school_id` = 1;
+
+
+INSERT INTO `grades` (`grade_id`, `grade`, `schools_school_id`) VALUES
+(1, 'Grade 1', 1)
+UPDATE `grades` SET `grade` = 'Updated Grade Name' WHERE `grade_id` = 1;
+DELETE FROM `grades` WHERE `grade_id` = 1;
+
+
+INSERT INTO `students` (`student_id`, `name`, `email`, `phone_number`, `parents_parents_id`, `grades_grade_id`, `grades_schools_school_id`) VALUES
+(1, 'Michael Doe', 'michael.doe@example.com', '111-222-3333', 1, 1, 1)
+UPDATE `students` SET `name` = 'Updated Student Name', `phone_number` = '444-555-6666' WHERE `student_id` = 1;
+DELETE FROM `students` WHERE `student_id` = 1;
+
+
+INSERT INTO `subjects` (`subject_id`, `subject_name`) VALUES
+(1, 'Mathematics')
+UPDATE subjects SET subject_name = 'Arts' WHERE subject_id = 1;
+DELETE FROM subjects WHERE subject_id = 1;
+
+
+INSERT INTO marks (mark_id, mark, date_assessed, students_student_id, subjects_subject_id) VALUES
+(1, 'A', '2024-05-01', 1, 1)
+UPDATE marks SET mark = 'B' , date_assessed = '2024-05-05' , students_student_id = 1 , subjects_subject_id
+= 1  WHERE mark_id  = 1;
+DELETE FROM marks WHERE mark_id = 1;
+
+
+INSERT INTO `attendance` (`attendance_id`, `date`, `status`, `students_student_id`, `subjects_subject_id`) VALUES
+(1, '2024-05-01', 1, 1, 1)
+UPDATE attendance SET date = '2024-01-01' , status = 1 WHERE attendance_id = 1;
+DELETE  FROM attendance WHERE students_student_id = 1;
+
+
+INSERT INTO `roles` (`role_id`, `role_name`) VALUES
+(1, 'Teacher')
+UPDATE roles SET role_name = 'Teacher' WHERE role_id = 1;
+DELETE FROM roles WHERE role_id = 1;
+
+
+INSERT INTO `qualifications` (`qualification_id`, `qualification_name`) VALUES
+(1, 'Bachelor of Science')
+UPDATE qualifications SET qualification_name = 'Bachelor of Arts' WHERE qualification_id = 1;
+DELETE FROM qualifications WHERE qualification_id = 1;
+
+
+INSERT INTO `teachers` (`teacher_id`, `name`, `email`, `qualifications_qualification_id`, `schools_school_id`, `grades_grade_id`, `subjects_subject_id`, `subjects_list`) VALUES
+(1, 'Teacher Johnson', 'teacher.johnson@example.com', 1, 1, 1, 1, 'Mathematics,Science')
+UPDATE `teachers`SET `name` = 'Updated Teacher Name', `email` = 'updated.email@example.com' WHERE `teacher_id` = 1;
+DELETE FROM `teachers` WHERE `teacher_id` = 1;
+
+
+INSERT INTO `schedule` (`schedule_id`, `students_student_id`, `schools_school_id`, `teachers_teacher_id`, `subjects_subject_id`) VALUES
+(1, 1, 1, 1, 1)
+UPDATE `schedule` SET `students_student_id` = 2, `subjects_subject_id` = 2 WHERE `schedule_id` = 1;
+DELETE FROM `schedule` WHERE `schedule_id` = 1;
