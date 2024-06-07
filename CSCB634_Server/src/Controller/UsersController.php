@@ -9,6 +9,10 @@ use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Users;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class UserRegistrationDto
 {
@@ -50,7 +54,7 @@ class UsersController extends AbstractController
         $this->passwordHasher = $passwordHasher;
     }
 
-    #[Route('/login', name: 'login')]
+    #[Route('/users/login', name: 'users_login')]
     public function login(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -77,10 +81,9 @@ class UsersController extends AbstractController
         ], JsonResponse::HTTP_OK);
     }
 
-    #[Route('/addUser', name: 'addUser')]
-    public function addUser(Request $request): JsonResponse
+    #[Route('/users/add', name: 'users_add')]
+    public function add(Request $request): JsonResponse
     {
-
         $data = json_decode($request->getContent(), true);
         $userDto = new UserRegistrationDto($data);
 
@@ -103,4 +106,65 @@ class UsersController extends AbstractController
 
         return new JsonResponse(['success' => 'User created successfully'], JsonResponse::HTTP_CREATED);
     }
+
+    #[Route('/users/delete/{id}', name: 'users_delete')]
+    public function delete(int $id): JsonResponse
+    {
+        $user = $this->entityManager->getRepository(Users::class)->find($id);
+
+        if (!$user) {
+            return new JsonResponse(['error' => 'User not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
+
+        return new JsonResponse(['success' => 'User deleted successfully'], JsonResponse::HTTP_OK);
+    }
+
+    #[Route('/users/getRole/{id}', name: 'users_getRole')]
+    public function getRole(int $id): JsonResponse
+    {
+        $user = $this->entityManager->getRepository(Users::class)->find($id);
+
+        if (!$user) {
+            return $this->json(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json(['role' => $user->getRole()]);
+    }
+
+    #[Route('/users/setRole/{id}', name: 'users_setRole')]
+    public function changeRole(Request $request, int $id): JsonResponse
+    {
+        $user = $this->entityManager->getRepository(Users::class)->find($id);
+
+        if (!$user) {
+            return $this->json(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['role'])) {
+            return $this->json(['message' => 'Invalid data'], Response::HTTP_BAD_REQUEST);
+        }
+        
+        $role = $data['role'];
+        $user->setRole($role);
+        $this->entityManager->flush();
+
+        return $this->json(['message' => 'Role updated successfully']);
+    }
+
+    #[Route('/users/list', name: 'users_list')]
+    public function list(): JsonResponse
+    {
+        $encoders = [new XmlEncoder(), new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
+
+        $users = $this->entityManager->getRepository(Users::class)->findAll();        
+        return $this->json($serializer->serialize($users, 'json'));
+    }
+
 }

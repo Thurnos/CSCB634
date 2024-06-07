@@ -79,6 +79,7 @@
     <parameter key="router.cache_dir">D:\Project\CSCB634\CSCB634_Server\var\cache\dev</parameter>
     <parameter key="request_listener.http_port">80</parameter>
     <parameter key="request_listener.https_port">443</parameter>
+    <parameter key="serializer.mapping.cache.file">D:\Project\CSCB634\CSCB634_Server\var\cache\dev/serialization.php</parameter>
     <parameter key="cache.prefix.seed">_D:\Project\CSCB634\CSCB634_Server.App_KernelDevDebugContainer</parameter>
     <parameter key="session.metadata.storage_key">_sf2_meta</parameter>
     <parameter key="session.storage.options" type="collection">
@@ -180,6 +181,78 @@
     <service id="App\Entity" class="App\Entity" abstract="true">
       <tag name="container.excluded" source="in &quot;config/services.yaml&quot;"/>
     </service>
+    <service id="App\Controller\GradesController" class="App\Controller\GradesController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Repository\GradesRepository"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.jUv.zyj.App\Controller\GradesController"/>
+      </call>
+    </service>
+    <service id="App\Controller\MarksController" class="App\Controller\MarksController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Repository\MarksRepository"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.jUv.zyj.App\Controller\MarksController"/>
+      </call>
+    </service>
+    <service id="App\Controller\ParentsController" class="App\Controller\ParentsController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Repository\ParentsRepository"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.jUv.zyj.App\Controller\ParentsController"/>
+      </call>
+    </service>
+    <service id="App\Controller\PrincipalsController" class="App\Controller\PrincipalsController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Repository\PrincipalsRepository"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.jUv.zyj.App\Controller\PrincipalsController"/>
+      </call>
+    </service>
+    <service id="App\Controller\SchoolsController" class="App\Controller\SchoolsController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Repository\SchoolsRepository"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.jUv.zyj.App\Controller\SchoolsController"/>
+      </call>
+    </service>
+    <service id="App\Controller\StudentsController" class="App\Controller\StudentsController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Repository\StudentsRepository"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.jUv.zyj.App\Controller\StudentsController"/>
+      </call>
+    </service>
+    <service id="App\Controller\SubjectsController" class="App\Controller\SubjectsController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Repository\SubjectsRepository"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.jUv.zyj.App\Controller\SubjectsController"/>
+      </call>
+    </service>
+    <service id="App\Controller\TeachersController" class="App\Controller\TeachersController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Repository\TeachersRepository"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.jUv.zyj.App\Controller\TeachersController"/>
+      </call>
+    </service>
     <service id="App\Controller\UsersController" class="App\Controller\UsersController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -188,6 +261,50 @@
       <call method="setContainer">
         <argument type="service" id=".service_locator.jUv.zyj.App\Controller\UsersController"/>
       </call>
+    </service>
+    <service id="App\Repository\AttendanceRepository" class="App\Repository\AttendanceRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\GradesRepository" class="App\Repository\GradesRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\MarksRepository" class="App\Repository\MarksRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\ParentsRepository" class="App\Repository\ParentsRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\PrincipalsRepository" class="App\Repository\PrincipalsRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\QualificationsRepository" class="App\Repository\QualificationsRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\RoleRepository" class="App\Repository\RoleRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\SchoolsRepository" class="App\Repository\SchoolsRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\StudentsRepository" class="App\Repository\StudentsRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\SubjectsRepository" class="App\Repository\SubjectsRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\TeachersRepository" class="App\Repository\TeachersRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
     </service>
     <service id="App\Repository\UsersRepository" class="App\Repository\UsersRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
@@ -203,7 +320,11 @@
     </service>
     <service id="argument_resolver.request_payload" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestPayloadValueResolver" lazy="true">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestPayloadValueResolver">controller.targeted_value_resolver</tag>
-      <tag name="container.error" message="You can neither use &quot;#[MapRequestPayload]&quot; nor &quot;#[MapQueryString]&quot; since the Serializer component is not installed. Try running &quot;composer require symfony/serializer-pack&quot;."/>
+      <tag name="kernel.event_subscriber"/>
+      <tag name="container.hot_path"/>
+      <argument type="service" id="serializer"/>
+      <argument>null</argument>
+      <argument>null</argument>
     </service>
     <service id="argument_resolver.request_attribute" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestAttributeValueResolver">
       <tag priority="100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestAttributeValueResolver">controller.argument_value_resolver</tag>
@@ -255,7 +376,7 @@
     <service id="error_controller" class="Symfony\Component\HttpKernel\Controller\ErrorController" public="true">
       <argument type="service" id="http_kernel"/>
       <argument>error_controller</argument>
-      <argument type="service" id="error_handler.error_renderer.html"/>
+      <argument type="service" id="error_handler.error_renderer.serializer"/>
     </service>
     <service id="exception_listener" class="Symfony\Component\HttpKernel\EventListener\ErrorListener">
       <tag name="monolog.logger" channel="request"/>
@@ -726,6 +847,17 @@
         <argument>Help debug routes by simulating a path info match</argument>
       </call>
     </service>
+    <service id="console.command.serializer_debug" class="Symfony\Component\Serializer\Command\DebugCommand">
+      <tag name="console.command"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="serializer.mapping.class_metadata_factory"/>
+      <call method="setName">
+        <argument>debug:serializer</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Display serialization information for classes</argument>
+      </call>
+    </service>
     <service id="console.command.yaml_lint" class="Symfony\Bundle\FrameworkBundle\Command\YamlLintCommand">
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
@@ -1056,6 +1188,14 @@
         <argument type="collection">
           <argument type="service_closure" id="security.context_listener.0"/>
           <argument>onKernelResponse</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.controller_arguments</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="argument_resolver.request_payload"/>
+          <argument>onKernelControllerArguments</argument>
         </argument>
         <argument>0</argument>
       </call>
@@ -1508,8 +1648,162 @@
     <service id="secrets.local_vault" class="Symfony\Bundle\FrameworkBundle\Secrets\DotenvVault">
       <argument>D:\Project\CSCB634\CSCB634_Server/.env.dev.local</argument>
     </service>
+    <service id="serializer" class="Symfony\Component\Serializer\Serializer">
+      <argument type="collection">
+        <argument type="service" id="serializer.denormalizer.unwrapping"/>
+        <argument type="service" id="serializer.normalizer.problem"/>
+        <argument type="service" id="serializer.normalizer.uid"/>
+        <argument type="service" id="serializer.normalizer.datetime"/>
+        <argument type="service" id="serializer.normalizer.constraint_violation_list"/>
+        <argument type="service" id="serializer.normalizer.datetimezone"/>
+        <argument type="service" id="serializer.normalizer.dateinterval"/>
+        <argument type="service" id="serializer.normalizer.form_error"/>
+        <argument type="service" id="serializer.normalizer.backed_enum"/>
+        <argument type="service" id="serializer.normalizer.data_uri"/>
+        <argument type="service" id="serializer.normalizer.json_serializable"/>
+        <argument type="service" id="serializer.denormalizer.array"/>
+        <argument type="service" id="serializer.normalizer.object"/>
+      </argument>
+      <argument type="collection">
+        <argument type="service" id="serializer.encoder.xml"/>
+        <argument type="service" id="serializer.encoder.json"/>
+        <argument type="service" id="serializer.encoder.yaml"/>
+        <argument type="service" id="serializer.encoder.csv"/>
+      </argument>
+    </service>
+    <service id="serializer.mapping.class_discriminator_resolver" class="Symfony\Component\Serializer\Mapping\ClassDiscriminatorFromClassMetadata">
+      <argument type="service" id="serializer.mapping.class_metadata_factory"/>
+    </service>
+    <service id="serializer.normalizer.constraint_violation_list" class="Symfony\Component\Serializer\Normalizer\ConstraintViolationListNormalizer" autowire="true">
+      <tag name="serializer.normalizer" priority="-915"/>
+      <argument type="collection"/>
+      <argument type="service" id="serializer.name_converter.metadata_aware"/>
+    </service>
+    <service id="serializer.normalizer.datetimezone" class="Symfony\Component\Serializer\Normalizer\DateTimeZoneNormalizer">
+      <tag name="serializer.normalizer" priority="-915"/>
+    </service>
+    <service id="serializer.normalizer.dateinterval" class="Symfony\Component\Serializer\Normalizer\DateIntervalNormalizer">
+      <tag name="serializer.normalizer" priority="-915"/>
+    </service>
+    <service id="serializer.normalizer.data_uri" class="Symfony\Component\Serializer\Normalizer\DataUriNormalizer">
+      <tag name="serializer.normalizer" priority="-920"/>
+      <argument>null</argument>
+    </service>
+    <service id="serializer.normalizer.datetime" class="Symfony\Component\Serializer\Normalizer\DateTimeNormalizer">
+      <tag name="serializer.normalizer" priority="-910"/>
+    </service>
+    <service id="serializer.normalizer.json_serializable" class="Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer">
+      <tag name="serializer.normalizer" priority="-950"/>
+      <argument>null</argument>
+      <argument>null</argument>
+    </service>
+    <service id="serializer.normalizer.problem" class="Symfony\Component\Serializer\Normalizer\ProblemNormalizer">
+      <tag name="serializer.normalizer" priority="-890"/>
+      <argument key="0">true</argument>
+      <argument key="translator">null</argument>
+    </service>
+    <service id="serializer.denormalizer.unwrapping" class="Symfony\Component\Serializer\Normalizer\UnwrappingDenormalizer">
+      <tag name="serializer.normalizer" priority="1000"/>
+      <argument type="service" id="property_accessor"/>
+    </service>
+    <service id="serializer.normalizer.uid" class="Symfony\Component\Serializer\Normalizer\UidNormalizer">
+      <tag name="serializer.normalizer" priority="-890"/>
+    </service>
+    <service id="serializer.normalizer.form_error" class="Symfony\Component\Serializer\Normalizer\FormErrorNormalizer">
+      <tag name="serializer.normalizer" priority="-915"/>
+    </service>
+    <service id="serializer.normalizer.object" class="Symfony\Component\Serializer\Normalizer\ObjectNormalizer">
+      <tag name="serializer.normalizer" priority="-1000"/>
+      <argument type="service" id="serializer.mapping.class_metadata_factory"/>
+      <argument type="service" id="serializer.name_converter.metadata_aware"/>
+      <argument type="service" id="property_accessor"/>
+      <argument type="service" id="property_info" on-invalid="ignore"/>
+      <argument type="service" id="serializer.mapping.class_discriminator_resolver" on-invalid="ignore"/>
+      <argument>null</argument>
+    </service>
+    <service id="serializer.normalizer.property" class="Symfony\Component\Serializer\Normalizer\PropertyNormalizer">
+      <argument type="service" id="serializer.mapping.class_metadata_factory"/>
+      <argument type="service" id="serializer.name_converter.metadata_aware"/>
+      <argument type="service" id="property_info" on-invalid="ignore"/>
+      <argument type="service" id="serializer.mapping.class_discriminator_resolver" on-invalid="ignore"/>
+      <argument>null</argument>
+      <argument type="collection"/>
+      <argument type="service" id="property_info" on-invalid="ignore"/>
+    </service>
+    <service id="serializer.denormalizer.array" class="Symfony\Component\Serializer\Normalizer\ArrayDenormalizer">
+      <tag name="serializer.normalizer" priority="-990"/>
+    </service>
+    <service id="serializer.mapping.chain_loader" class="Symfony\Component\Serializer\Mapping\Loader\LoaderChain">
+      <argument type="collection">
+        <argument type="service">
+          <service class="Symfony\Component\Serializer\Mapping\Loader\AttributeLoader"/>
+        </argument>
+      </argument>
+    </service>
+    <service id="serializer.mapping.class_metadata_factory" class="Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory">
+      <argument type="service" id="serializer.mapping.chain_loader"/>
+    </service>
+    <service id="serializer.mapping.cache_warmer" class="Symfony\Bundle\FrameworkBundle\CacheWarmer\SerializerCacheWarmer">
+      <tag name="kernel.cache_warmer"/>
+      <argument type="collection">
+        <argument type="service">
+          <service class="Symfony\Component\Serializer\Mapping\Loader\AttributeLoader"/>
+        </argument>
+      </argument>
+      <argument>D:\Project\CSCB634\CSCB634_Server\var\cache\dev/serialization.php</argument>
+    </service>
+    <service id="serializer.mapping.cache.symfony" class="Psr\Cache\CacheItemPoolInterface">
+      <argument>D:\Project\CSCB634\CSCB634_Server\var\cache\dev/serialization.php</argument>
+      <argument type="service" id="cache.serializer"/>
+      <factory class="Symfony\Component\Cache\Adapter\PhpArrayAdapter" method="create"/>
+    </service>
+    <service id="serializer.encoder.xml" class="Symfony\Component\Serializer\Encoder\XmlEncoder">
+      <tag name="serializer.encoder"/>
+    </service>
+    <service id="serializer.encoder.json" class="Symfony\Component\Serializer\Encoder\JsonEncoder">
+      <tag name="serializer.encoder"/>
+      <argument>null</argument>
+      <argument>null</argument>
+    </service>
+    <service id="serializer.encoder.yaml" class="Symfony\Component\Serializer\Encoder\YamlEncoder">
+      <tag name="serializer.encoder"/>
+      <argument>null</argument>
+      <argument>null</argument>
+    </service>
+    <service id="serializer.encoder.csv" class="Symfony\Component\Serializer\Encoder\CsvEncoder">
+      <tag name="serializer.encoder"/>
+    </service>
+    <service id="serializer.name_converter.camel_case_to_snake_case" class="Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter"/>
+    <service id="serializer.name_converter.metadata_aware" class="Symfony\Component\Serializer\NameConverter\MetadataAwareNameConverter">
+      <argument type="service" id="serializer.mapping.class_metadata_factory"/>
+    </service>
+    <service id="property_info.serializer_extractor" class="Symfony\Component\PropertyInfo\Extractor\SerializerExtractor">
+      <tag name="property_info.list_extractor" priority="-999"/>
+      <argument type="service" id="serializer.mapping.class_metadata_factory"/>
+    </service>
+    <service id="error_handler.error_renderer.serializer" class="Symfony\Component\ErrorHandler\ErrorRenderer\SerializerErrorRenderer">
+      <argument type="service" id="serializer"/>
+      <argument type="service">
+        <service>
+          <argument type="service" id="request_stack"/>
+          <factory class="Symfony\Component\ErrorHandler\ErrorRenderer\SerializerErrorRenderer" method="getPreferredFormat"/>
+        </service>
+      </argument>
+      <argument type="service" id="error_handler.error_renderer.html"/>
+      <argument type="service">
+        <service>
+          <argument type="service" id="request_stack"/>
+          <argument>true</argument>
+          <factory class="Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer" method="isDebug"/>
+        </service>
+      </argument>
+    </service>
+    <service id="serializer.normalizer.backed_enum" class="Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer">
+      <tag name="serializer.normalizer" priority="-915"/>
+    </service>
     <service id="property_info" class="Symfony\Component\PropertyInfo\PropertyInfoExtractor">
       <argument type="iterator">
+        <argument type="service" id="property_info.serializer_extractor"/>
         <argument type="service" id="property_info.reflection_extractor"/>
         <argument type="service" id="doctrine.orm.default_entity_manager.property_info_extractor"/>
       </argument>
@@ -1820,7 +2114,7 @@
     <service id="doctrine.orm.configuration" class="Doctrine\ORM\Configuration" abstract="true"/>
     <service id="doctrine.orm.entity_manager.abstract" class="Doctrine\ORM\EntityManager" lazy="true" abstract="true"/>
     <service id="doctrine.orm.container_repository_factory" class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory">
-      <argument type="service" id=".service_locator.6_XyAor"/>
+      <argument type="service" id=".service_locator.WHMyuDo"/>
     </service>
     <service id="doctrine.orm.manager_configurator.abstract" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator" abstract="true">
       <argument type="collection"/>
@@ -3070,9 +3364,55 @@
         <argument>Hash a user password</argument>
       </call>
     </service>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\GradesController" class="App\Controller\GradesController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\GradesController" class="App\Controller\GradesController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\GradesController" class="App\Controller\GradesController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\MarksController" class="App\Controller\MarksController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\MarksController" class="App\Controller\MarksController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\MarksController" class="App\Controller\MarksController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ParentsController" class="App\Controller\ParentsController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ParentsController" class="App\Controller\ParentsController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\ParentsController" class="App\Controller\ParentsController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\PrincipalsController" class="App\Controller\PrincipalsController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\PrincipalsController" class="App\Controller\PrincipalsController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\PrincipalsController" class="App\Controller\PrincipalsController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SchoolsController" class="App\Controller\SchoolsController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SchoolsController" class="App\Controller\SchoolsController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\SchoolsController" class="App\Controller\SchoolsController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\StudentsController" class="App\Controller\StudentsController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\StudentsController" class="App\Controller\StudentsController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\StudentsController" class="App\Controller\StudentsController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SubjectsController" class="App\Controller\SubjectsController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SubjectsController" class="App\Controller\SubjectsController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\SubjectsController" class="App\Controller\SubjectsController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\TeachersController" class="App\Controller\TeachersController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\TeachersController" class="App\Controller\TeachersController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\TeachersController" class="App\Controller\TeachersController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\UsersController" class="App\Controller\UsersController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\UsersController" class="App\Controller\UsersController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\UsersController" class="App\Controller\UsersController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\AttendanceRepository" class="App\Repository\AttendanceRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\AttendanceRepository" class="App\Repository\AttendanceRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\GradesRepository" class="App\Repository\GradesRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\GradesRepository" class="App\Repository\GradesRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\MarksRepository" class="App\Repository\MarksRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\MarksRepository" class="App\Repository\MarksRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ParentsRepository" class="App\Repository\ParentsRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\ParentsRepository" class="App\Repository\ParentsRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\PrincipalsRepository" class="App\Repository\PrincipalsRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\PrincipalsRepository" class="App\Repository\PrincipalsRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\QualificationsRepository" class="App\Repository\QualificationsRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\QualificationsRepository" class="App\Repository\QualificationsRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\RoleRepository" class="App\Repository\RoleRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\RoleRepository" class="App\Repository\RoleRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\SchoolsRepository" class="App\Repository\SchoolsRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\SchoolsRepository" class="App\Repository\SchoolsRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\StudentsRepository" class="App\Repository\StudentsRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\StudentsRepository" class="App\Repository\StudentsRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\SubjectsRepository" class="App\Repository\SubjectsRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\SubjectsRepository" class="App\Repository\SubjectsRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\TeachersRepository" class="App\Repository\TeachersRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\TeachersRepository" class="App\Repository\TeachersRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\UsersRepository" class="App\Repository\UsersRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\UsersRepository" class="App\Repository\UsersRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".service_locator.bJ.4HC5" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -3581,9 +3921,20 @@
         <argument key="doctrine.orm.listeners.pdo_session_handler_schema_listener" type="service_closure" id="doctrine.orm.listeners.pdo_session_handler_schema_listener"/>
       </argument>
     </service>
-    <service id=".service_locator.6_XyAor" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.WHMyuDo" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
+        <argument key="App\Repository\AttendanceRepository" type="service_closure" id="App\Repository\AttendanceRepository"/>
+        <argument key="App\Repository\GradesRepository" type="service_closure" id="App\Repository\GradesRepository"/>
+        <argument key="App\Repository\MarksRepository" type="service_closure" id="App\Repository\MarksRepository"/>
+        <argument key="App\Repository\ParentsRepository" type="service_closure" id="App\Repository\ParentsRepository"/>
+        <argument key="App\Repository\PrincipalsRepository" type="service_closure" id="App\Repository\PrincipalsRepository"/>
+        <argument key="App\Repository\QualificationsRepository" type="service_closure" id="App\Repository\QualificationsRepository"/>
+        <argument key="App\Repository\RoleRepository" type="service_closure" id="App\Repository\RoleRepository"/>
+        <argument key="App\Repository\SchoolsRepository" type="service_closure" id="App\Repository\SchoolsRepository"/>
+        <argument key="App\Repository\StudentsRepository" type="service_closure" id="App\Repository\StudentsRepository"/>
+        <argument key="App\Repository\SubjectsRepository" type="service_closure" id="App\Repository\SubjectsRepository"/>
+        <argument key="App\Repository\TeachersRepository" type="service_closure" id="App\Repository\TeachersRepository"/>
         <argument key="App\Repository\UsersRepository" type="service_closure" id="App\Repository\UsersRepository"/>
       </argument>
     </service>
@@ -3722,7 +4073,56 @@
         <argument key="security.authorization_checker" type="service_closure" id="security.authorization_checker" on-invalid="ignore"/>
         <argument key="security.csrf.token_manager" type="service_closure" id="security.csrf.token_manager" on-invalid="ignore"/>
         <argument key="security.token_storage" type="service_closure" id="security.token_storage" on-invalid="ignore"/>
+        <argument key="serializer" type="service_closure" id="serializer" on-invalid="ignore"/>
       </argument>
+    </service>
+    <service id=".service_locator.jUv.zyj.App\Controller\GradesController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\GradesController"/>
+      <argument>App\Controller\GradesController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.jUv.zyj" method="withContext"/>
+    </service>
+    <service id=".service_locator.jUv.zyj.App\Controller\MarksController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\MarksController"/>
+      <argument>App\Controller\MarksController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.jUv.zyj" method="withContext"/>
+    </service>
+    <service id=".service_locator.jUv.zyj.App\Controller\ParentsController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ParentsController"/>
+      <argument>App\Controller\ParentsController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.jUv.zyj" method="withContext"/>
+    </service>
+    <service id=".service_locator.jUv.zyj.App\Controller\PrincipalsController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\PrincipalsController"/>
+      <argument>App\Controller\PrincipalsController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.jUv.zyj" method="withContext"/>
+    </service>
+    <service id=".service_locator.jUv.zyj.App\Controller\SchoolsController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\SchoolsController"/>
+      <argument>App\Controller\SchoolsController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.jUv.zyj" method="withContext"/>
+    </service>
+    <service id=".service_locator.jUv.zyj.App\Controller\StudentsController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\StudentsController"/>
+      <argument>App\Controller\StudentsController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.jUv.zyj" method="withContext"/>
+    </service>
+    <service id=".service_locator.jUv.zyj.App\Controller\SubjectsController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\SubjectsController"/>
+      <argument>App\Controller\SubjectsController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.jUv.zyj" method="withContext"/>
+    </service>
+    <service id=".service_locator.jUv.zyj.App\Controller\TeachersController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\TeachersController"/>
+      <argument>App\Controller\TeachersController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.jUv.zyj" method="withContext"/>
     </service>
     <service id=".service_locator.jUv.zyj.App\Controller\UsersController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\UsersController"/>
@@ -3842,6 +4242,14 @@
       <call method="allowControllers">
         <argument type="collection">
           <argument>App\Kernel</argument>
+          <argument>App\Controller\GradesController</argument>
+          <argument>App\Controller\MarksController</argument>
+          <argument>App\Controller\ParentsController</argument>
+          <argument>App\Controller\PrincipalsController</argument>
+          <argument>App\Controller\SchoolsController</argument>
+          <argument>App\Controller\StudentsController</argument>
+          <argument>App\Controller\SubjectsController</argument>
+          <argument>App\Controller\TeachersController</argument>
           <argument>App\Controller\UsersController</argument>
           <argument>Doctrine\Bundle\DoctrineBundle\Controller\ProfilerController</argument>
         </argument>
@@ -4014,6 +4422,13 @@
       <argument>Help debug routes by simulating a path info match</argument>
       <argument>false</argument>
       <argument type="service_closure" id="console.command.router_match"/>
+    </service>
+    <service id=".console.command.serializer_debug.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>debug:serializer</argument>
+      <argument type="collection"/>
+      <argument>Display serialization information for classes</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="console.command.serializer_debug"/>
     </service>
     <service id=".console.command.yaml_lint.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>lint:yaml</argument>
@@ -4365,7 +4780,7 @@
     </service>
     <service id="console.command_loader" class="Symfony\Component\Console\CommandLoader\ContainerCommandLoader" public="true">
       <tag name="container.no_preload"/>
-      <argument type="service" id=".service_locator.8NfubJG"/>
+      <argument type="service" id=".service_locator.iz.P_WZ"/>
       <argument type="collection">
         <argument key="about">console.command.about</argument>
         <argument key="assets:install">console.command.assets_install</argument>
@@ -4385,6 +4800,7 @@
         <argument key="debug:event-dispatcher">console.command.event_dispatcher_debug</argument>
         <argument key="debug:router">console.command.router_debug</argument>
         <argument key="router:match">console.command.router_match</argument>
+        <argument key="debug:serializer">console.command.serializer_debug</argument>
         <argument key="lint:yaml">console.command.yaml_lint</argument>
         <argument key="secrets:set">console.command.secrets_set</argument>
         <argument key="secrets:remove">console.command.secrets_remove</argument>
@@ -4455,7 +4871,7 @@
         <argument key="make:webhook">maker.auto_command.make_webhook</argument>
       </argument>
     </service>
-    <service id=".service_locator.8NfubJG" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.iz.P_WZ" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="Doctrine\DBAL\Tools\Console\Command\RunSqlCommand" type="service_closure" id="Doctrine\DBAL\Tools\Console\Command\RunSqlCommand"/>
@@ -4483,6 +4899,7 @@
         <argument key="console.command.secrets_list" type="service_closure" id=".console.command.secrets_list.lazy"/>
         <argument key="console.command.secrets_remove" type="service_closure" id=".console.command.secrets_remove.lazy"/>
         <argument key="console.command.secrets_set" type="service_closure" id=".console.command.secrets_set.lazy"/>
+        <argument key="console.command.serializer_debug" type="service_closure" id=".console.command.serializer_debug.lazy"/>
         <argument key="console.command.yaml_lint" type="service_closure" id=".console.command.yaml_lint.lazy"/>
         <argument key="doctrine.cache_clear_metadata_command" type="service_closure" id="doctrine.cache_clear_metadata_command"/>
         <argument key="doctrine.cache_clear_query_cache_command" type="service_closure" id="doctrine.cache_clear_query_cache_command"/>
@@ -4563,7 +4980,7 @@
     <service id="Psr\Clock\ClockInterface" alias="clock"/>
     <service id="Symfony\Component\HttpKernel\Fragment\FragmentUriGeneratorInterface" alias="fragment.uri_generator"/>
     <service id="error_renderer.html" alias="error_handler.error_renderer.html"/>
-    <service id="error_renderer" alias="error_handler.error_renderer.html"/>
+    <service id="error_renderer" alias="error_handler.error_renderer.serializer"/>
     <service id=".Psr\Container\ContainerInterface $parameter_bag" alias="parameter_bag"/>
     <service id="Psr\Container\ContainerInterface $parameterBag" alias="parameter_bag"/>
     <service id="cache.app_clearer" alias="cache.default_clearer" public="true"/>
@@ -4579,6 +4996,15 @@
     <service id="Symfony\Component\Routing\RequestContextAwareInterface" alias="router.default"/>
     <service id="Symfony\Component\Routing\RequestContext" alias="router.request_context"/>
     <service id="Symfony\Component\PropertyAccess\PropertyAccessorInterface" alias="property_accessor"/>
+    <service id="Symfony\Component\Serializer\SerializerInterface" alias="serializer"/>
+    <service id="Symfony\Component\Serializer\Normalizer\NormalizerInterface" alias="serializer"/>
+    <service id="Symfony\Component\Serializer\Normalizer\DenormalizerInterface" alias="serializer"/>
+    <service id="Symfony\Component\Serializer\Encoder\EncoderInterface" alias="serializer"/>
+    <service id="Symfony\Component\Serializer\Encoder\DecoderInterface" alias="serializer"/>
+    <service id="serializer.property_accessor" alias="property_accessor"/>
+    <service id="Symfony\Component\Serializer\Mapping\ClassDiscriminatorResolverInterface" alias="serializer.mapping.class_discriminator_resolver"/>
+    <service id="Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface" alias="serializer.mapping.class_metadata_factory"/>
+    <service id="error_renderer.serializer" alias="error_handler.error_renderer.serializer"/>
     <service id="Symfony\Component\PropertyInfo\PropertyAccessExtractorInterface" alias="property_info"/>
     <service id="Symfony\Component\PropertyInfo\PropertyDescriptionExtractorInterface" alias="property_info"/>
     <service id="Symfony\Component\PropertyInfo\PropertyInfoExtractorInterface" alias="property_info"/>
@@ -4643,6 +5069,6 @@
     <service id="doctrine.orm.default_metadata_driver" alias=".doctrine.orm.default_metadata_driver"/>
     <service id="security.event_dispatcher.main" alias="debug.security.event_dispatcher.main"/>
     <service id=".service_locator.gFlme_s" alias=".service_locator.y4_Zrx."/>
-    <service id=".service_locator.jxnIR8C" alias=".service_locator.jUv.zyj"/>
+    <service id=".service_locator.wCoTccS" alias=".service_locator.jUv.zyj"/>
   </services>
 </container>
