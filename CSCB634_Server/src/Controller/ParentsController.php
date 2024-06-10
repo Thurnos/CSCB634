@@ -4,25 +4,31 @@ namespace App\Controller;
 
 use App\Entity\Parents;
 use App\Repository\ParentsRepository;
+use App\Repository\StudentsRepository;
+use App\Repository\AttendanceRepository;
+use App\Repository\MarksRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 class ParentsController extends AbstractController
 {
     private $entityManager;
     private $parentsRepository;
+    private $studentsRepository;
+    private $attendanceRepository;
+    private $marksRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, ParentsRepository $parentsRepository)
+    public function __construct(EntityManagerInterface $entityManager, ParentsRepository $parentsRepository, StudentsRepository $studentsRepository,
+    AttendanceRepository $attendanceRepository, MarksRepository $marksRepository)
     {
         $this->entityManager = $entityManager;
         $this->parentsRepository = $parentsRepository;
+        $this->studentsRepository = $studentsRepository;
+        $this->attendanceRepository = $attendanceRepository;
+        $this->marksRepository = $marksRepository;
     }
 
     #[Route('/parents/add', name: 'parents_add')]
@@ -41,7 +47,7 @@ class ParentsController extends AbstractController
         return $this->json(['message' => 'Parent created successfully'], Response::HTTP_CREATED);
     }
 
-    #[Route('/parents/getParent', name: 'parents_getParent')]
+    #[Route('/parents/getParent/{id}', name: 'parents_getParent')]
     public function getParent(int $id): Response
     {
         $parent = $this->parentsRepository->find($id);
@@ -91,12 +97,41 @@ class ParentsController extends AbstractController
     #[Route('/parents/list', name: 'parents_list')]
     public function list(): Response
     {
-        $encoders = [new XmlEncoder(), new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
         $parents = $this->parentsRepository->findAll();
 
-        return $this->json($serializer->serialize($parents, 'json'));
+        return $this->json($parents);
+    }
+
+    #[Route('/parents/{id}/students', name: 'parent_students')]
+    public function getStudentsByParent(int $id): Response
+    {
+        $parent = $this->parentsRepository->find($id);
+
+        if (!$parent) {
+            return $this->json(['message' => 'Parent not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $students = $this->studentsRepository->findByParentId($id);
+        $results = [];
+
+        foreach ($students as $student) {
+            $id = $student->getId();
+
+            // Fetch marks and attendance for the student
+            $marks = $this->marksRepository->findByStudentId($id);
+            $attendance = $this->attendanceRepository->findByStudentId($id);
+
+            // Append the grades and attendance to the student data
+            $results[] = [
+                'id' => $id,
+                'name' => $student->getName(),
+                'email' => $student->getEmail(),
+                'number' => $student->getNumber(),
+                'marks' => $marks,
+                'attendance' => $attendance,
+            ];
+        }
+        return $this->json($results);
     }
 }
 

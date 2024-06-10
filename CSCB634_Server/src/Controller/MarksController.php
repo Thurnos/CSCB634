@@ -12,9 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/marks")
- */
 class MarksController extends AbstractController
 {
     private $entityManager;
@@ -43,7 +40,7 @@ class MarksController extends AbstractController
         return $this->json(['message' => 'Mark created successfully'], Response::HTTP_CREATED);
     }
 
-    #[Route('/marks/getMarks/{id}', name: 'marks_getMarks')]
+    #[Route('/marks/getMark/{id}', name: 'marks_getMark')]
     public function getMark(int $id): Response
     {
         $mark = $this->marksRepository->find($id);
@@ -94,11 +91,8 @@ class MarksController extends AbstractController
     #[Route('/marks/list', name: 'marks_list')]
     public function list(): Response
     {
-        $encoders = [new XmlEncoder(), new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
         $marks = $this->marksRepository->findAll();
 
-        return $this->json($serializer->serialize($marks, 'json'));
+        return $this->json($marks);
     }
 }

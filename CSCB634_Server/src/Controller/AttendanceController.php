@@ -9,10 +9,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 class AttendanceController extends AbstractController
 {
@@ -31,8 +27,8 @@ class AttendanceController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         $attendance = new Attendance();
-        $attendance->setDate(new \DateTime($data['date']));
-        $attendance->setStatus($data['status']);
+        $attendance->setDate(new \DateTime($data['date']) ?? null);
+        $attendance->setStatus($data['status'] ?? null);
         $attendance->setStudentId($data['student_id']);
         $attendance->setSubjectId($data['subject_id']);
 
@@ -93,12 +89,9 @@ class AttendanceController extends AbstractController
     #[Route('/attendance/list', name: 'attendance_list')]
     public function list(): Response
     {
-        $encoders = [new XmlEncoder(), new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
         $attendanceRecords = $this->attendanceRepository->findAll();
 
-        return $this->json($serializer->serialize($attendanceRecords, 'json'));
+        return $this->json($attendanceRecords);
     }
 }
 

@@ -9,10 +9,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 class SubjectsController extends AbstractController
 {
@@ -32,34 +28,19 @@ class SubjectsController extends AbstractController
 
         $subject = new Subjects();
         $subject->setName($data['name']);
+        $subject->setSchoolId($data['school_id'] ?? null);
 
         $this->entityManager->persist($subject);
         $this->entityManager->flush();
 
-        return $this->json($subject);
-    }
-
-    #[Route('/subjects/show/{id}', name: 'subject_show')]
-    public function show($id): Response
-    {
-        $subject = $this->subjectsRepository->find($id);
-
-        if (!$subject) {
-            return $this->json(['message' => 'Subject not found'], Response::HTTP_NOT_FOUND);
-        }
-
-        return $this->json($subject);
+        return $this->json(['message' => 'Subject created successfully'], Response::HTTP_CREATED);
     }
 
     #[Route('/subjects/list', name: 'subject_list')]
     public function list(): Response
     {
-        $encoders = [new XmlEncoder(), new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
         $subjects = $this->subjectsRepository->findAll();
-
-        return $this->json($serializer->serialize($subjects, 'json'));
+        return $this->json($subjects);
     }
 
     #[Route('/subjects/edit/{id}', name: 'subject_edit')]
@@ -72,7 +53,8 @@ class SubjectsController extends AbstractController
         }
 
         $data = json_decode($request->getContent(), true);
-        $subject->setName($data['name']);
+        $subject->setName($data['name'] ?? $subject->setName());
+        $subject->setSchoolId($data['school_id'] ?? $subject->setSchoolId());
 
         $this->entityManager->flush();
 

@@ -62,4 +62,68 @@ class UsersControllerTest extends WebTestCase
         $this->assertJson($client->getResponse()->getContent());
         $this->assertStringContainsString('User deleted successfully', $client->getResponse()->getContent());
     }
+    public function testGetUserRole()
+    {
+        $client = static::createClient();
+
+        // First, create a user to fetch the role
+        $client->request('POST', '/users/add', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
+            'username' => 'roleuser',
+            'password' => 'rolepassword',
+            'role' => 1
+        ]));
+
+        $responseContent = json_decode($client->getResponse()->getContent(), true);
+        $userId = $responseContent['id']; // Assuming the response contains the user ID
+
+        // Fetch the user's role
+        $client->request('GET', '/users/getRole/' . $userId);
+
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        $this->assertJson($client->getResponse()->getContent());
+        $this->assertStringContainsString('"role":1', $client->getResponse()->getContent());
+    }
+
+    public function testChangeUserRole()
+    {
+        $client = static::createClient();
+
+        // First, create a user to change the role
+        $client->request('POST', '/users/add', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
+            'username' => 'changeroleuser',
+            'password' => 'changerolepassword',
+            'role' => 1
+        ]));
+
+        $responseContent = json_decode($client->getResponse()->getContent(), true);
+        $userId = $responseContent['id']; // Assuming the response contains the user ID
+
+        // Change the user's role
+        $client->request('POST', '/users/setRole/' . $userId, [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
+            'role' => 2
+        ]));
+
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        $this->assertJson($client->getResponse()->getContent());
+        $this->assertStringContainsString('Role updated successfully', $client->getResponse()->getContent());
+    }
+
+    public function testListUsers()
+    {
+        $client = static::createClient();
+
+        // Ensure there is at least one user to list
+        $client->request('POST', '/users/add', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
+            'username' => 'listuser',
+            'password' => 'listpassword',
+            'role' => 1
+        ]));
+
+        // List users
+        $client->request('GET', '/users/list');
+
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        $this->assertJson($client->getResponse()->getContent());
+        $this->assertStringContainsString('"username":"listuser"', $client->getResponse()->getContent());
+    }
 }

@@ -65,6 +65,7 @@ class ComposerStaticInit2e074b178cf99c894ccdda33ec3f7bde
             'Symfony\\Bundle\\MakerBundle\\' => 27,
             'Symfony\\Bundle\\FrameworkBundle\\' => 31,
             'Symfony\\Bridge\\Doctrine\\' => 24,
+            'Scienta\\DoctrineJsonFunctions\\' => 30,
         ),
         'P' => 
         array (
@@ -95,6 +96,7 @@ class ComposerStaticInit2e074b178cf99c894ccdda33ec3f7bde
             'Doctrine\\Common\\' => 16,
             'Doctrine\\Bundle\\MigrationsBundle\\' => 33,
             'Doctrine\\Bundle\\DoctrineBundle\\' => 31,
+            'DoctrineExtensions\\' => 19,
             'DeepCopy\\' => 9,
         ),
         'A' => 
@@ -277,6 +279,10 @@ class ComposerStaticInit2e074b178cf99c894ccdda33ec3f7bde
         array (
             0 => __DIR__ . '/..' . '/symfony/doctrine-bridge',
         ),
+        'Scienta\\DoctrineJsonFunctions\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/scienta/doctrine-json-functions/src',
+        ),
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
@@ -360,6 +366,10 @@ class ComposerStaticInit2e074b178cf99c894ccdda33ec3f7bde
         'Doctrine\\Bundle\\DoctrineBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/doctrine-bundle/src',
+        ),
+        'DoctrineExtensions\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/beberlei/doctrineextensions/src',
         ),
         'DeepCopy\\' => 
         array (

@@ -11,10 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 class GradesController extends AbstractController
 {
@@ -34,7 +30,7 @@ class GradesController extends AbstractController
 
         $grade = new Grades();
         $grade->setGrade($data['grade'] ?? null);
-        $grade->setStudentId($data['student_id']);
+        $grade->setStudentIds($data['student_ids'] ?? []);
         $grade->setSchoolId($data['school_id']);
 
         $this->entityManager->persist($grade);
@@ -67,7 +63,7 @@ class GradesController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         $grade->setGrade($data['grade'] ?? $grade->getGrade());
-        $grade->setStudentId($data['student_id'] ?? $grade->getStudentId());
+        $grade->setStudentIds($data['student_ids'] ?? $grade->getStudentIds());
         $grade->setSchoolId($data['school_id'] ?? $grade->getSchoolId());
 
         $this->entityManager->flush();
@@ -93,12 +89,9 @@ class GradesController extends AbstractController
     #[Route('/grades/list', name: 'grades_list')]
     public function list(): Response
     {
-        $encoders = [new XmlEncoder(), new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
         $grades = $this->gradesRepository->findAll();
 
-        return $this->json($serializer->serialize($grades, 'json'));
+        return $this->json($grades);
     }
 }
 

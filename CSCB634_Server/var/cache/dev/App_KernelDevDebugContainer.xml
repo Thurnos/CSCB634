@@ -181,6 +181,15 @@
     <service id="App\Entity" class="App\Entity" abstract="true">
       <tag name="container.excluded" source="in &quot;config/services.yaml&quot;"/>
     </service>
+    <service id="App\Controller\AttendanceController" class="App\Controller\AttendanceController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Repository\AttendanceRepository"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.jUv.zyj.App\Controller\AttendanceController"/>
+      </call>
+    </service>
     <service id="App\Controller\GradesController" class="App\Controller\GradesController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -204,6 +213,9 @@
       <tag name="container.service_subscriber"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <argument type="service" id="App\Repository\ParentsRepository"/>
+      <argument type="service" id="App\Repository\StudentsRepository"/>
+      <argument type="service" id="App\Repository\AttendanceRepository"/>
+      <argument type="service" id="App\Repository\MarksRepository"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.jUv.zyj.App\Controller\ParentsController"/>
       </call>
@@ -213,8 +225,30 @@
       <tag name="container.service_subscriber"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <argument type="service" id="App\Repository\PrincipalsRepository"/>
+      <argument type="service" id="App\Repository\StudentsRepository"/>
+      <argument type="service" id="App\Repository\SubjectsRepository"/>
+      <argument type="service" id="App\Repository\TeachersRepository"/>
+      <argument type="service" id="App\Repository\ParentsRepository"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.jUv.zyj.App\Controller\PrincipalsController"/>
+      </call>
+    </service>
+    <service id="App\Controller\QualificationsController" class="App\Controller\QualificationsController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Repository\QualificationsRepository"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.jUv.zyj.App\Controller\QualificationsController"/>
+      </call>
+    </service>
+    <service id="App\Controller\ScheduleController" class="App\Controller\ScheduleController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Repository\ScheduleRepository"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.jUv.zyj.App\Controller\ScheduleController"/>
       </call>
     </service>
     <service id="App\Controller\SchoolsController" class="App\Controller\SchoolsController" public="true" autowire="true" autoconfigure="true">
@@ -231,6 +265,7 @@
       <tag name="container.service_subscriber"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <argument type="service" id="App\Repository\StudentsRepository"/>
+      <argument type="service" id="App\Repository\ScheduleRepository"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.jUv.zyj.App\Controller\StudentsController"/>
       </call>
@@ -249,6 +284,13 @@
       <tag name="container.service_subscriber"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <argument type="service" id="App\Repository\TeachersRepository"/>
+      <argument type="service" id="App\Repository\GradesRepository"/>
+      <argument type="service" id="App\Repository\AttendanceRepository"/>
+      <argument type="service" id="App\Repository\MarksRepository"/>
+      <argument type="service" id="App\Repository\ScheduleRepository"/>
+      <argument type="service" id="App\Repository\StudentsRepository"/>
+      <argument type="service" id="App\Repository\QualificationsRepository"/>
+      <argument type="service" id="App\Repository\SubjectsRepository"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.jUv.zyj.App\Controller\TeachersController"/>
       </call>
@@ -287,6 +329,10 @@
       <argument type="service" id="doctrine"/>
     </service>
     <service id="App\Repository\RoleRepository" class="App\Repository\RoleRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\ScheduleRepository" class="App\Repository\ScheduleRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
@@ -2114,7 +2160,7 @@
     <service id="doctrine.orm.configuration" class="Doctrine\ORM\Configuration" abstract="true"/>
     <service id="doctrine.orm.entity_manager.abstract" class="Doctrine\ORM\EntityManager" lazy="true" abstract="true"/>
     <service id="doctrine.orm.container_repository_factory" class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory">
-      <argument type="service" id=".service_locator.WHMyuDo"/>
+      <argument type="service" id=".service_locator.h4zAw.y"/>
     </service>
     <service id="doctrine.orm.manager_configurator.abstract" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator" abstract="true">
       <argument type="collection"/>
@@ -2319,6 +2365,22 @@
       </call>
       <call method="setRepositoryFactory">
         <argument type="service" id="doctrine.orm.container_repository_factory"/>
+      </call>
+      <call method="addCustomStringFunction">
+        <argument>JSON_EXTRACT</argument>
+        <argument>Scienta\DoctrineJsonFunctions\Query\AST\Functions\Mysql\JsonExtract</argument>
+      </call>
+      <call method="addCustomStringFunction">
+        <argument>JSON_SEARCH</argument>
+        <argument>Scienta\DoctrineJsonFunctions\Query\AST\Functions\Mysql\JsonSearch</argument>
+      </call>
+      <call method="addCustomStringFunction">
+        <argument>JSON_GET_TEXT</argument>
+        <argument>Scienta\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonGetText</argument>
+      </call>
+      <call method="addCustomStringFunction">
+        <argument>JSON_CONTAINS</argument>
+        <argument>DoctrineExtensions\Query\Mysql\JsonContains</argument>
       </call>
     </service>
     <service id="doctrine.orm.default_attribute_metadata_driver" class="Doctrine\ORM\Mapping\Driver\AttributeDriver">
@@ -3364,6 +3426,9 @@
         <argument>Hash a user password</argument>
       </call>
     </service>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\AttendanceController" class="App\Controller\AttendanceController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AttendanceController" class="App\Controller\AttendanceController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\AttendanceController" class="App\Controller\AttendanceController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\GradesController" class="App\Controller\GradesController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\GradesController" class="App\Controller\GradesController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\GradesController" class="App\Controller\GradesController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -3376,6 +3441,12 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\PrincipalsController" class="App\Controller\PrincipalsController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\PrincipalsController" class="App\Controller\PrincipalsController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\PrincipalsController" class="App\Controller\PrincipalsController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\QualificationsController" class="App\Controller\QualificationsController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\QualificationsController" class="App\Controller\QualificationsController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\QualificationsController" class="App\Controller\QualificationsController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ScheduleController" class="App\Controller\ScheduleController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ScheduleController" class="App\Controller\ScheduleController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\ScheduleController" class="App\Controller\ScheduleController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SchoolsController" class="App\Controller\SchoolsController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SchoolsController" class="App\Controller\SchoolsController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\SchoolsController" class="App\Controller\SchoolsController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -3405,6 +3476,8 @@
     <service id=".abstract.instanceof.App\Repository\QualificationsRepository" class="App\Repository\QualificationsRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\RoleRepository" class="App\Repository\RoleRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\RoleRepository" class="App\Repository\RoleRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ScheduleRepository" class="App\Repository\ScheduleRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\ScheduleRepository" class="App\Repository\ScheduleRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\SchoolsRepository" class="App\Repository\SchoolsRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\SchoolsRepository" class="App\Repository\SchoolsRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\StudentsRepository" class="App\Repository\StudentsRepository" autowire="true" abstract="true"/>
@@ -3921,7 +3994,7 @@
         <argument key="doctrine.orm.listeners.pdo_session_handler_schema_listener" type="service_closure" id="doctrine.orm.listeners.pdo_session_handler_schema_listener"/>
       </argument>
     </service>
-    <service id=".service_locator.WHMyuDo" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.h4zAw.y" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Repository\AttendanceRepository" type="service_closure" id="App\Repository\AttendanceRepository"/>
@@ -3931,6 +4004,7 @@
         <argument key="App\Repository\PrincipalsRepository" type="service_closure" id="App\Repository\PrincipalsRepository"/>
         <argument key="App\Repository\QualificationsRepository" type="service_closure" id="App\Repository\QualificationsRepository"/>
         <argument key="App\Repository\RoleRepository" type="service_closure" id="App\Repository\RoleRepository"/>
+        <argument key="App\Repository\ScheduleRepository" type="service_closure" id="App\Repository\ScheduleRepository"/>
         <argument key="App\Repository\SchoolsRepository" type="service_closure" id="App\Repository\SchoolsRepository"/>
         <argument key="App\Repository\StudentsRepository" type="service_closure" id="App\Repository\StudentsRepository"/>
         <argument key="App\Repository\SubjectsRepository" type="service_closure" id="App\Repository\SubjectsRepository"/>
@@ -4076,6 +4150,12 @@
         <argument key="serializer" type="service_closure" id="serializer" on-invalid="ignore"/>
       </argument>
     </service>
+    <service id=".service_locator.jUv.zyj.App\Controller\AttendanceController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\AttendanceController"/>
+      <argument>App\Controller\AttendanceController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.jUv.zyj" method="withContext"/>
+    </service>
     <service id=".service_locator.jUv.zyj.App\Controller\GradesController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\GradesController"/>
       <argument>App\Controller\GradesController</argument>
@@ -4097,6 +4177,18 @@
     <service id=".service_locator.jUv.zyj.App\Controller\PrincipalsController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\PrincipalsController"/>
       <argument>App\Controller\PrincipalsController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.jUv.zyj" method="withContext"/>
+    </service>
+    <service id=".service_locator.jUv.zyj.App\Controller\QualificationsController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\QualificationsController"/>
+      <argument>App\Controller\QualificationsController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.jUv.zyj" method="withContext"/>
+    </service>
+    <service id=".service_locator.jUv.zyj.App\Controller\ScheduleController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ScheduleController"/>
+      <argument>App\Controller\ScheduleController</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.jUv.zyj" method="withContext"/>
     </service>
@@ -4242,10 +4334,13 @@
       <call method="allowControllers">
         <argument type="collection">
           <argument>App\Kernel</argument>
+          <argument>App\Controller\AttendanceController</argument>
           <argument>App\Controller\GradesController</argument>
           <argument>App\Controller\MarksController</argument>
           <argument>App\Controller\ParentsController</argument>
           <argument>App\Controller\PrincipalsController</argument>
+          <argument>App\Controller\QualificationsController</argument>
+          <argument>App\Controller\ScheduleController</argument>
           <argument>App\Controller\SchoolsController</argument>
           <argument>App\Controller\StudentsController</argument>
           <argument>App\Controller\SubjectsController</argument>

@@ -40,4 +40,22 @@ class GradesRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+   /* public function findById(int $gradeId): array
+    {
+        return $this->createQueryBuilder('g')
+            ->where('g.id = :gradeId')
+            ->setParameter('gradeId', $gradeId)
+            ->getQuery()
+            ->getResult();
+    }*/
+
+    public function findBySchoolId(int $schoolId): array
+    {
+        return $this->createQueryBuilder('g')
+        ->where('g.school_id = :schoolId')
+        ->setParameter('schoolId', $schoolId)
+        ->getQuery()
+        ->getResult();
+    }
 }

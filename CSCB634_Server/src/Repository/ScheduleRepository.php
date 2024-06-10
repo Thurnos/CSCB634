@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\Students;
+use App\Entity\Schedule;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Students>
+ * @extends ServiceEntityRepository<Schedule>
  */
-class StudentsRepository extends ServiceEntityRepository
+class ScheduleRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Students::class);
+        parent::__construct($registry, Schedule::class);
     }
 
     //    /**
-    //     * @return Students[] Returns an array of Students objects
+    //     * @return Schedule[] Returns an array of Schedule objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -31,7 +31,7 @@ class StudentsRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Students
+    //    public function findOneBySomeField($value): ?Schedule
     //    {
     //        return $this->createQueryBuilder('s')
     //            ->andWhere('s.exampleField = :val')
@@ -40,20 +40,23 @@ class StudentsRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
-    /**
-     * @param int $parentId
-     * @return Students[]
-     */
-    public function findByParentId(int $parentId): array
+
+    public function findByStudentId(int $studentId): array
     {
-        $entityManager = $this->getEntityManager();
+        return $this->createQueryBuilder('s')
+            ->where('s.student_id = :studentId')
+            ->setParameter('studentId', $studentId)
+            ->getQuery()
+            ->getResult();
+    }
 
-        $query = $entityManager->createQuery(
-            'SELECT s FROM App\Entity\Students s
-            WHERE JSON_CONTAINS(s.parent_ids, :parentId) = 1'
-        )->setParameter('parentId', $parentId);
-
-        return $query->getResult();
+    public function findByTeacherId(int $teacherId): array
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s.teacher_id = :teacherId')
+            ->setParameter('teacherId', $teacherId)
+            ->getQuery()
+            ->getResult();
     }
 
     public function findBySchoolId(int $schoolId): array

@@ -4,25 +4,44 @@ namespace App\Controller;
 
 use App\Entity\Teachers;
 use App\Repository\TeachersRepository;
+use App\Repository\GradesRepository;
+use App\Repository\AttendanceRepository;
+use App\Repository\MarksRepository;
+use App\Repository\StudentsRepository;
+use App\Repository\SubjectsRepository;
+use App\Repository\QualificationsRepository;
+use App\Repository\ScheduleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 class TeachersController extends AbstractController
 {
     private $entityManager;
     private $teachersRepository;
+    private $gradesRepository;
+    private $attendanceRepository;
+    private $marksRepository;
+    private $scheduleRepository;
+    private $studentsRepository;
+    private $qualificationsRepository;
+    private $subjectsRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, TeachersRepository $teachersRepository)
+    public function __construct(EntityManagerInterface $entityManager, TeachersRepository $teachersRepository, GradesRepository $gradesRepository,
+    AttendanceRepository $attendanceRepository, MarksRepository $marksRepository, ScheduleRepository $scheduleRepository, 
+    StudentsRepository $studentsRepository, QualificationsRepository $qualificationsRepository, SubjectsRepository $subjectsRepository)
     {
         $this->entityManager = $entityManager;
         $this->teachersRepository = $teachersRepository;
+        $this->gradesRepository = $gradesRepository;
+        $this->attendanceRepository = $attendanceRepository;
+        $this->marksRepository = $marksRepository;
+        $this->scheduleRepository = $scheduleRepository;
+        $this->studentsRepository = $studentsRepository;
+        $this->qualificationsRepository = $qualificationsRepository;
+        $this->subjectsRepository = $subjectsRepository;
     }
 
     #[Route('/teachers/add', name: 'teachers_add')]
@@ -35,9 +54,8 @@ class TeachersController extends AbstractController
         $teacher->setEmail($data['email'] ?? null);
         $teacher->setQualificationIds($data['qualification_ids'] ?? []);
         $teacher->setSchoolId($data['school_id'] ?? null);
-        $teacher->setGradeId($data['grade_id'] ?? null);
-        $teacher->setSubjectId($data['subject_id'] ?? null);
-        $teacher->setSubjectsList($data['subjects_list'] ?? '');
+        $teacher->setGradeIds($data['grade_ids'] ?? []);
+        $teacher->setSubjectIds($data['subject_ids'] ?? []);
 
         $this->entityManager->persist($teacher);
         $this->entityManager->flush();
@@ -58,7 +76,7 @@ class TeachersController extends AbstractController
     }
 
     #[Route('/teachers/edit/{id}', name: 'teachers_edit')]
-    public function update(Request $request, int $id): Response
+    public function edit(Request $request, int $id): Response
     {
         $teacher = $this->teachersRepository->find($id);
 
@@ -72,9 +90,8 @@ class TeachersController extends AbstractController
         $teacher->setEmail($data['email'] ?? $teacher->getEmail());
         $teacher->setQualificationIds($data['qualification_ids'] ?? $teacher->getQualificationIds());
         $teacher->setSchoolId($data['school_id'] ?? $teacher->getSchoolId());
-        $teacher->setGradeId($data['grade_id'] ?? $teacher->getGradeId());
-        $teacher->setSubjectId($data['subject_id'] ?? $teacher->getSubjectId());
-        $teacher->setSubjectsList($data['subjects_list'] ?? $teacher->getSubjectsList());
+        $teacher->setGradeIds($data['grade_ids'] ?? $teacher->getGradeIds());
+        $teacher->setSubjectIds($data['subject_ids'] ?? $teacher->getSubjectIds());
 
         $this->entityManager->flush();
 
@@ -100,13 +117,110 @@ class TeachersController extends AbstractController
     #[Route('/teachers/list', name: 'teachers_list')]
     public function list(): Response
     {
-        $encoders = [new XmlEncoder(), new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
         $teachers = $this->teachersRepository->findAll();
-
-        return $this->json($serializer->serialize($teachers, 'json'));
+        return $this->json($teachers);
     }
 
-    //TODO update grades and attendance
+    #[Route('/teachers/getStudents/{id}', name: 'teachers_students')]
+    public function getStudents(int $id): Response
+    {
+        $teacher = $this->teachersRepository->find($id);
+
+        if (!$teacher) {
+            return $this->json(['message' => 'Teacher not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $gradeIds = $teacher->getGradeIds();
+
+        if (!$gradeIds) {
+            return $this->json(['message' => 'Grades not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $results = [];
+       
+        foreach ($gradeIds as $gradeId) {   
+            $studentIds = $this->gradesRepository->find($gradeId)->getStudentIds();
+
+            foreach ($studentIds as $studentId) {
+                $student = $this->studentsRepository->find($studentId);
+
+                if($student) {
+                    // Fetch marks and attendance for the student
+                    $marks = $this->marksRepository->findByStudentId($studentId);
+                    $attendance = $this->attendanceRepository->findByStudentId($studentId);
+        
+                    // Append the grades and attendance to the student data
+                    $results[] = [
+                        'id' => $studentId,
+                        'name' => $student->getName(),
+                        'email' => $student->getEmail(),
+                        'number' => $student->getNumber(),
+                        'marks' => $marks,
+                        'attendance' => $attendance,
+                    ];
+                }
+            }
+        }
+
+        return $this->json($results);
+    }
+
+    #[Route('/teachers/getSchedule/{id}', name: 'teachers_getSchedule')]
+    public function getSchedule(int $id): Response
+    {
+        if (!$id) {
+            return $this->json(['message' => 'Teacher not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $schedule = $this->scheduleRepository->findByTeacherId($id);
+        return $this->json($schedule);
+    }
+
+    #[Route('/teachers/getSubjects/{id}', name: 'teachers_getSubjects')]
+    public function getSubjects(int $id): Response
+    {
+        $teacher = $this->teachersRepository->find($id);
+
+        if (!$teacher) {
+            return $this->json(['message' => 'Teacher not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $subjectIds = $teacher->getSubjectIds();
+        $results = [];
+       
+        foreach ($subjectIds as $subjectId) {
+            $subject = $this->subjectsRepository->find($subjectId);
+            if($subject) {
+                $results[] = [
+                    'id' => $subjectId,
+                    'name' => $subject->getName()
+                ];
+            }
+        }
+        return $this->json($results);
+    }
+
+    #[Route('/teachers/getQualifications/{id}', name: 'teachers_getQualifications')]
+    public function getQualifications(int $id): Response
+    {
+        $teacher = $this->teachersRepository->find($id);
+
+        if (!$teacher) {
+            return $this->json(['message' => 'Teacher not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $qualificationIds = $teacher->getQualificationIds();
+        $results = [];
+       
+        foreach ($qualificationIds as $qualificationId) {
+            $qualification = $this->qualificationsRepository->find($qualificationId);
+            if($qualification) {
+                $results[] = [
+                    'id' => $qualificationId,
+                    'name' => $qualification->getName()
+                ];
+            }
+        }
+        return $this->json($results);
+    }
 }

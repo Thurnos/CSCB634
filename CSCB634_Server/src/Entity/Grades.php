@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\GradesRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GradesRepository::class)]
@@ -16,8 +17,8 @@ class Grades
     #[ORM\Column(length: 45, nullable: true)]
     private ?string $grade = null;
 
-    #[ORM\Column]
-    private ?int $student_id = null;
+    #[ORM\Column(type: Types::JSON)]
+    private array $student_ids = [];
 
     #[ORM\Column]
     private ?int $school_id = null;
@@ -39,14 +40,14 @@ class Grades
         return $this;
     }
 
-    public function getStudentId(): ?int
+    public function getStudentIds(): array
     {
-        return $this->student_id;
+        return $this->student_ids;
     }
 
-    public function setStudentId(int $student_id): static
+    public function setStudentIds(array $student_ids): static
     {
-        $this->student_id = $student_id;
+        $this->student_ids = $student_ids;
 
         return $this;
     }

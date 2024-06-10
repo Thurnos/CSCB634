@@ -40,4 +40,13 @@ class SubjectsRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findBySchoolId(int $schoolId): array
+    {
+        return $this->createQueryBuilder('s')
+        ->where('s.school_id = :schoolId')
+        ->setParameter('schoolId', $schoolId)
+        ->getQuery()
+        ->getResult();
+    }
 }

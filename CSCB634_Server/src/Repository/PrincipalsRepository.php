@@ -40,4 +40,13 @@ class PrincipalsRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findBySchoolId(int $schoolId): array
+    {
+        return $this->createQueryBuilder('p')
+        ->where('p.school_id = :schoolId')
+        ->setParameter('schoolId', $schoolId)
+        ->getQuery()
+        ->getResult();
+    }
 }

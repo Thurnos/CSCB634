@@ -20,20 +20,17 @@ class Teachers
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $email = null;
 
-    #[ORM\Column(type: Types::ARRAY)]
+    #[ORM\Column(type: Types::JSON)]
     private array $qualification_ids = [];
 
     #[ORM\Column]
     private ?int $school_id = null;
 
-    #[ORM\Column]
-    private ?int $grade_id = null;
+    #[ORM\Column(type: Types::JSON)]
+    private array $grade_ids = [];
 
-    #[ORM\Column]
-    private ?int $subject_id = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $subjects_list = null;
+    #[ORM\Column(type: Types::JSON)]
+    private array $subject_ids = [];
 
     public function getId(): ?int
     {
@@ -88,38 +85,26 @@ class Teachers
         return $this;
     }
 
-    public function getGradeId(): ?int
+    public function getGradeIds(): array
     {
-        return $this->grade_id;
+        return $this->grade_ids;
     }
 
-    public function setGradeId(int $grade_id): static
+    public function setGradeIds(array $grade_ids): static
     {
-        $this->grade_id = $grade_id;
+        $this->grade_ids = $grade_ids;
 
         return $this;
     }
 
-    public function getSubjectId(): ?int
+    public function getSubjectIds(): array
     {
-        return $this->subject_id;
+        return $this->subject_ids;
     }
 
-    public function setSubjectId(int $subject_id): static
+    public function setSubjectIds(array $subject_ids): static
     {
-        $this->subject_id = $subject_id;
-
-        return $this;
-    }
-
-    public function getSubjectsList(): ?string
-    {
-        return $this->subjects_list;
-    }
-
-    public function setSubjectsList(string $subjects_list): static
-    {
-        $this->subjects_list = $subjects_list;
+        $this->subject_ids = $subject_ids;
 
         return $this;
     }

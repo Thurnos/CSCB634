@@ -23,8 +23,11 @@ class Students
     #[ORM\Column(length: 45, nullable: true)]
     private ?string $number = null;
 
-    #[ORM\Column(type: Types::ARRAY)]
+    #[ORM\Column(type: Types::JSON)]
     private array $parent_ids = [];
+
+    #[ORM\Column]
+    private ?int $school_id = null;
 
     public function getId(): ?int
     {
@@ -75,6 +78,18 @@ class Students
     public function setParentIds(array $parent_ids): static
     {
         $this->parent_ids = $parent_ids;
+
+        return $this;
+    }
+
+    public function getSchoolId(): ?int
+    {
+        return $this->school_id;
+    }
+
+    public function setSchoolId(int $school_id): static
+    {
+        $this->school_id = $school_id;
 
         return $this;
     }

@@ -40,4 +40,13 @@ class MarksRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findByStudentId(int $studentId): array
+    {
+        return $this->createQueryBuilder('m')
+            ->where('m.student_id = :studentId')
+            ->setParameter('studentId', $studentId)
+            ->getQuery()
+            ->getResult();
+    }
 }

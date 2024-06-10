@@ -40,4 +40,13 @@ class AttendanceRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findByStudentId(int $studentId): array
+    {
+        return $this->createQueryBuilder('g')
+            ->where('g.student_id = :studentId')
+            ->setParameter('studentId', $studentId)
+            ->getQuery()
+            ->getResult();
+    }
 }
