@@ -11,6 +11,7 @@ use App\Repository\StudentsRepository;
 use App\Repository\SubjectsRepository;
 use App\Repository\QualificationsRepository;
 use App\Repository\ScheduleRepository;
+use App\Repository\SchoolsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,10 +29,12 @@ class TeachersController extends AbstractController
     private $studentsRepository;
     private $qualificationsRepository;
     private $subjectsRepository;
+    private $schoolsRepository;
 
     public function __construct(EntityManagerInterface $entityManager, TeachersRepository $teachersRepository, GradesRepository $gradesRepository,
     AttendanceRepository $attendanceRepository, MarksRepository $marksRepository, ScheduleRepository $scheduleRepository, 
-    StudentsRepository $studentsRepository, QualificationsRepository $qualificationsRepository, SubjectsRepository $subjectsRepository)
+    StudentsRepository $studentsRepository, QualificationsRepository $qualificationsRepository, SubjectsRepository $subjectsRepository, 
+    SchoolsRepository $schoolsRepository)
     {
         $this->entityManager = $entityManager;
         $this->teachersRepository = $teachersRepository;
@@ -42,6 +45,7 @@ class TeachersController extends AbstractController
         $this->studentsRepository = $studentsRepository;
         $this->qualificationsRepository = $qualificationsRepository;
         $this->subjectsRepository = $subjectsRepository;
+        $this->schoolsRepository = $schoolsRepository;
     }
 
     #[Route('/teachers/add', name: 'teachers_add')]
@@ -118,7 +122,26 @@ class TeachersController extends AbstractController
     public function list(): Response
     {
         $teachers = $this->teachersRepository->findAll();
-        return $this->json($teachers);
+        $result = [];
+
+        foreach ($teachers as $teacher) {
+            $school = $this->schoolsRepository->find($teacher->getSchoolId());
+            $teacherId = $teacher->getId();
+
+            $result[] = [
+                'id' => $teacherId,
+                'name' => $teacher->getName(),
+                'school' => [
+                    'id' => $teacher->getSchoolId(),
+                    'name' => $school ? $school->getName() : ''
+                ],
+                'subjects' => json_decode($this->getSubjects($teacherId)->getContent(), true),
+                'grades' => json_decode($this->getGrades($teacherId)->getContent(), true),
+                'qualifications' => json_decode($this->getQualifications($teacherId)->getContent(), true),
+
+            ];
+        }
+        return $this->json($result);
     }
 
     #[Route('/teachers/getStudents/{id}', name: 'teachers_students')]
@@ -218,6 +241,30 @@ class TeachersController extends AbstractController
                 $results[] = [
                     'id' => $qualificationId,
                     'name' => $qualification->getName()
+                ];
+            }
+        }
+        return $this->json($results);
+    }
+
+    #[Route('/teachers/getGrades/{id}', name: 'teachers_getGrades')]
+    public function getGrades(int $id): Response
+    {
+        $teacher = $this->teachersRepository->find($id);
+
+        if (!$teacher) {
+            return $this->json(['message' => 'Teacher not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $gradeIds = $teacher->getGradeIds();
+        $results = [];
+       
+        foreach ($gradeIds as $gradeId) {
+            $grade = $this->subjectsRepository->find($gradeId);
+            if($grade) {
+                $results[] = [
+                    'id' => $gradeId,
+                    'name' => $grade->getName()
                 ];
             }
         }

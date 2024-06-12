@@ -195,6 +195,8 @@
       <tag name="container.service_subscriber"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <argument type="service" id="App\Repository\GradesRepository"/>
+      <argument type="service" id="App\Repository\StudentsRepository"/>
+      <argument type="service" id="App\Repository\SchoolsRepository"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.jUv.zyj.App\Controller\GradesController"/>
       </call>
@@ -291,6 +293,7 @@
       <argument type="service" id="App\Repository\StudentsRepository"/>
       <argument type="service" id="App\Repository\QualificationsRepository"/>
       <argument type="service" id="App\Repository\SubjectsRepository"/>
+      <argument type="service" id="App\Repository\SchoolsRepository"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.jUv.zyj.App\Controller\TeachersController"/>
       </call>

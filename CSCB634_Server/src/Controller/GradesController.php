@@ -6,6 +6,8 @@ namespace App\Controller;
 
 use App\Entity\Grades;
 use App\Repository\GradesRepository;
+use App\Repository\StudentsRepository;
+use App\Repository\SchoolsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,11 +18,16 @@ class GradesController extends AbstractController
 {
     private $entityManager;
     private $gradesRepository;
+    private $studentsRepository;
+    private $schoolsRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, GradesRepository $gradesRepository)
+    public function __construct(EntityManagerInterface $entityManager, GradesRepository $gradesRepository, StudentsRepository $studentsRepository, 
+    SchoolsRepository $schoolsRepository)
     {
         $this->entityManager = $entityManager;
         $this->gradesRepository = $gradesRepository;
+        $this->studentsRepository = $studentsRepository;
+        $this->schoolsRepository = $schoolsRepository;
     }
 
     #[Route('/grades/add', name: 'grades_add')]
@@ -90,8 +97,50 @@ class GradesController extends AbstractController
     public function list(): Response
     {
         $grades = $this->gradesRepository->findAll();
+        $result = [];
 
-        return $this->json($grades);
+        foreach ($grades as $grade) {
+            $school = $this->schoolsRepository->find($grade->getSchoolId());
+            $gradeId = $grade->getId();
+
+            $result[] = [
+                'id' => $gradeId,
+                'grade' => $grade->getGrade(),
+                'school' => [
+                    'id' => $grade->getSchoolId(),
+                    'name' => $school ? $school->getName() : ''
+                ],
+                'students' => json_decode($this->getStudents($gradeId)->getContent(), true),
+            ];
+        }
+        return $this->json($result);
+    }
+
+    
+    #[Route('/grades/getStudents/{id}', name: 'grades_students')]
+    public function getStudents(int $id): Response
+    {
+        $grade = $this->gradesRepository->find($id);
+
+        if (!$grade) {
+            return $this->json(['message' => 'Grade not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $studentIds = $this->gradesRepository->find($grade->getId())->getStudentIds();
+
+        foreach ($studentIds as $studentId) {
+            $student = $this->studentsRepository->find($studentId);
+
+            if($student) {        
+                $results[] = [
+                    'id' => $studentId,
+                    'name' => $student->getName(),
+                    'email' => $student->getEmail(),
+                    'number' => $student->getNumber(),
+                ];
+            }
+        }
+        return $this->json($results);
     }
 }
 
