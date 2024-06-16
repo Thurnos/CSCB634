@@ -116,7 +116,6 @@ class GradesController extends AbstractController
         return $this->json($result);
     }
 
-    
     #[Route('/grades/getStudents/{id}', name: 'grades_students')]
     public function getStudents(int $id): Response
     {
@@ -142,5 +141,37 @@ class GradesController extends AbstractController
         }
         return $this->json($results);
     }
+
+    #[Route('/grades/getGradeByStudent/{id}', name: 'grade_student')]
+    public function getStudentGrade(int $id): Response
+    {
+        $student = $this->studentsRepository->find($id);
+
+        if (!$student)
+            return $this->json(['message' => 'Student not found'], Response::HTTP_NOT_FOUND);
+
+        $grades = $this->gradesRepository->findByStudentId($id);
+
+        if (!$grades)
+            return $this->json(['message' => 'Grades not found'], Response::HTTP_NOT_FOUND);
+
+        $result = [];
+        foreach ($grades as $grade) {
+            $school = $this->schoolsRepository->find($grade->getSchoolId());
+            $gradeId = $grade->getId();
+
+            $result[] = [
+                'id' => $gradeId,
+                'grade' => $grade->getGrade(),
+                'school' => [
+                    'id' => $grade->getSchoolId(),
+                    'name' => $school ? $school->getName() : ''
+                ],
+                'students' => json_decode($this->getStudents($gradeId)->getContent(), true),
+            ];
+        }
+        return $this->json($result);
+    }
+
 }
 

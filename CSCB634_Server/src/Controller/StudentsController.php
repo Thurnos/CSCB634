@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Students;
+use App\Repository\ParentsRepository;
+use App\Repository\SchoolsRepository;
 use App\Repository\StudentsRepository;
 use App\Repository\ScheduleRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,12 +18,16 @@ class StudentsController extends AbstractController
     private $entityManager;
     private $studentsRepository;
     private $scheduleRepository;
+    private $parentsRepository;
+    private $schoolsRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, StudentsRepository $studentsRepository, ScheduleRepository $scheduleRepository)
+    public function __construct(EntityManagerInterface $entityManager, StudentsRepository $studentsRepository, ScheduleRepository $scheduleRepository,ParentsRepository $parentsRepository,SchoolsRepository $schoolsRepository)
     {
         $this->entityManager = $entityManager;
         $this->studentsRepository = $studentsRepository;
         $this->scheduleRepository = $scheduleRepository;
+        $this->parentsRepository = $parentsRepository;
+        $this->schoolsRepository = $schoolsRepository;
     }
 
     #[Route('/students/add', name: 'students_add')]
@@ -52,6 +58,31 @@ class StudentsController extends AbstractController
         }
 
         return $this->json($student);
+    }
+
+    #[Route('/students/getStudent/{email}', name: 'students_getStudent')]
+    public function getStudentByEmail(string $email): Response
+    {
+        $student = $this->studentsRepository->findByEmail($email);
+        $school = $this->schoolsRepository->find($student->getSchoolId());
+
+        if (!$student) {
+            return $this->json(['message' => 'Student not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $result[] = [
+            'id' => $student->getId(),
+            'name' => $student->getName(),
+            'school' => [
+                'id' => $school->getId(),
+                'name' => $school ? $school->getName() : ''
+            ],
+            'number' => $student->getNumber(),
+            'email' => $student->getEmail(),
+            'parentIds' => $student->getParentIds()
+        ];
+
+        return $this->json($result);
     }
 
     #[Route('/students/edit/{id}', name: 'students_get')]
@@ -94,7 +125,24 @@ class StudentsController extends AbstractController
     public function list(): Response
     {
         $students = $this->studentsRepository->findAll();
-        return $this->json($students);
+        $result = [];
+
+        foreach ($students as $student) {
+            $school = $this->schoolsRepository->find($student->getSchoolId());
+
+            $result[] = [
+                'id' => $student->getId(),
+                'name' => $student->getName(),
+                'school' => [
+                    'id' => $school->getId(),
+                    'name' => $school ? $school->getName() : ''
+                ],
+                'number' => $student->getNumber(),
+                'email' => $student->getEmail(),
+                'parentIds' => $student->getParentIds()
+            ];
+        }
+        return $this->json($result);
     }
 
     #[Route('/students/getSchedule/{id}', name: 'students_getSchedule')]

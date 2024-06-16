@@ -52,13 +52,70 @@ class ParentsController extends AbstractController
     {
         $parent = $this->parentsRepository->find($id);
 
-        if (!$parent) {
+        if (!$parent)
             return $this->json(['message' => 'Parent not found'], Response::HTTP_NOT_FOUND);
+
+
+        $parentIds = [$parent->getId()];
+        $allStudents = $this->studentsRepository->findAll();
+
+        $filteredStudents = array_filter($allStudents, function($student) use ($id) {
+            return in_array($id,$student->getParentIds());
+        });
+        $formattedStudents = [];
+        foreach ($filteredStudents as $student) {
+            $formattedStudents[] = [
+                'id' => $student->getId(),
+                'name' => $student->getName(),
+                // Add other student fields as needed
+            ];
         }
 
-        return $this->json($parent);
-    }
+        // Prepare the response data
+        $responseData = [
+            'id' => $parent->getId(),
+            'name' => $parent->getName(),
+            'email' => $parent->getEmail(),
+            'number' =>$parent->getNumber(),
+            'students' => $formattedStudents,
+        ];
 
+        return $this->json($responseData);
+    }
+    #[Route('/parents/getParentByEmail/{email}', name: 'parents_getParentByEmail')]
+    public function getParentByEmail(string $email): Response
+    {
+        $parent = $this->parentsRepository->findByEmail($email);
+
+        if (!$parent)
+            return $this->json(['message' => 'Parent not found'], Response::HTTP_NOT_FOUND);
+
+        $allStudents = $this->studentsRepository->findAll();
+        $filteredStudents = array_filter($allStudents, function($student) use ($parent) {
+            return in_array($parent->getId(),$student->getParentIds());
+        });
+        $formattedStudents = [];
+
+        foreach ($filteredStudents as $student) {
+            $formattedStudents[] = [
+                'id' => $student->getId(),
+                'name' => $student->getName(),
+                'email' => $student->getEmail(),
+                'number'=>$student->getNumber(),
+                'school_id'=>$student->getSchoolId()
+            ];
+        }
+
+        $responseData = [
+            'id' => $parent->getId(),
+            'name' => $parent->getName(),
+            'email' => $parent->getEmail(),
+            'number' =>$parent->getNumber(),
+            'students' => $formattedStudents,
+        ];
+
+        return $this->json($responseData);
+    }
     #[Route('/parents/edit/{id}', name: 'parents_edit')]
     public function edit(Request $request, int $id): Response
     {

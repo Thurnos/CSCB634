@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Subjects;
+use App\Repository\SchoolsRepository;
 use App\Repository\SubjectsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,11 +15,13 @@ class SubjectsController extends AbstractController
 {
     private $entityManager;
     private $subjectsRepository;
+    private $schoolsRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, SubjectsRepository $subjectsRepository)
+    public function __construct(EntityManagerInterface $entityManager, SubjectsRepository $subjectsRepository, SchoolsRepository $schoolsRepository)
     {
         $this->entityManager = $entityManager;
         $this->subjectsRepository = $subjectsRepository;
+        $this->schoolsRepository = $schoolsRepository;
     }
 
     #[Route('/subjects/add', name: 'subject_add')]
@@ -40,7 +43,22 @@ class SubjectsController extends AbstractController
     public function list(): Response
     {
         $subjects = $this->subjectsRepository->findAll();
-        return $this->json($subjects);
+
+        $result = [];
+
+        foreach ($subjects as $subject) {
+            $school = $this->schoolsRepository->find($subject->getSchoolId());
+
+            $result[] = [
+                'id' => $subject->getId(),
+                'name' => $subject->getName(),
+                'school' => [
+                    'id' => $school->getId(),
+                    'name' => $school ? $school->getName() : ''
+                ],
+            ];
+        }
+        return $this->json($result);
     }
 
     #[Route('/subjects/edit/{id}', name: 'subject_edit')]
@@ -74,5 +92,26 @@ class SubjectsController extends AbstractController
         $this->entityManager->flush();
 
         return $this->json(['message' => 'Subject deleted successfully']);
+    }
+
+    #[Route('/subjects/school/{id}', name: 'subjects_school_list')]
+    public function getSubjectsForSchool(int $id): Response
+    {
+        $subjects = $this->subjectsRepository->findBySchoolId($id);
+        $result = [];
+
+        foreach ($subjects as $subject) {
+            $school = $this->schoolsRepository->find($subject->getSchoolId());
+
+            $result[] = [
+                'id' => $subject->getId(),
+                'name' => $subject->getName(),
+                'school' => [
+                    'id' => $school->getId(),
+                    'name' => $school ? $school->getName() : ''
+                ],
+            ];
+        }
+        return $this->json($result);
     }
 }

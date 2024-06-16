@@ -6,6 +6,8 @@ namespace App\Controller;
 
 use App\Entity\Marks;
 use App\Repository\MarksRepository;
+use App\Repository\StudentsRepository;
+use App\Repository\SubjectsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,11 +18,15 @@ class MarksController extends AbstractController
 {
     private $entityManager;
     private $marksRepository;
+    private $studentsRepository;
+    private $subjectsRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, MarksRepository $marksRepository)
+    public function __construct(EntityManagerInterface $entityManager, MarksRepository $marksRepository,StudentsRepository $studentsRepository,SubjectsRepository $subjectsRepository)
     {
         $this->entityManager = $entityManager;
         $this->marksRepository = $marksRepository;
+        $this->studentsRepository = $studentsRepository;
+        $this->subjectsRepository=$subjectsRepository;
     }
 
     #[Route('/marks/add', name: 'marks_add')]
@@ -93,6 +99,86 @@ class MarksController extends AbstractController
     {
         $marks = $this->marksRepository->findAll();
 
-        return $this->json($marks);
+        $result = [];
+
+        foreach ($marks as $mark) {
+            $student = $this->studentsRepository->find($mark->getStudentId());
+            $subject = $this->subjectsRepository->find($mark->getSubjectId());
+
+            $result[] = [
+                'id' => $mark->getId(),
+                'mark' => $mark->getMark(),
+                'date' => $mark->getDate(),
+                'student' => [
+                    'id' => $student->getId(),
+                    'name' => $student->getName(),
+                    'number' => $student->getNumber(),
+                    'email' => $student->getEmail(),
+                ],
+                'subject' => [
+                    'id' => $subject->getId(),
+                    'name' => $subject->getName(),
+                    'school' => $subject->getSchoolId()
+                ]
+            ];
+        }
+        return $this->json($result);
+    }
+
+    #[Route('/marks/student/list/{id}', name: 'marks_student_list')]
+    public function studentMarksList(int $id): Response
+    {
+        $marks = $this->marksRepository->findByStudentId($id);
+
+        $result = [];
+
+        foreach ($marks as $mark) {
+            $student = $this->studentsRepository->find($mark->getStudentId());
+            $subject = $this->subjectsRepository->find($mark->getSubjectId());
+
+            $result[] = [
+                'id' => $mark->getId(),
+                'mark' => $mark->getMark(),
+                'date' => $mark->getDate(),
+                'student' => [
+                    'id' => $student->getId(),
+                    'name' => $student->getName(),
+                    'number' => $student->getNumber(),
+                    'email' => $student->getEmail(),
+                ],
+                'subject' => [
+                    'id' => $subject->getId(),
+                    'name' => $subject->getName(),
+                    'school' => $subject->getSchoolId()
+                ]
+            ];
+        }
+        return $this->json($result);
+    }
+    #[Route('/marks/subject/list/{id}', name: 'marks_subject_list')]
+    public function subjectMarksList(int $id): Response
+    {
+        $marks = $this->marksRepository->findBySubjectId($id);
+        $result = [];
+
+        foreach ($marks as $mark) {
+            $student = $this->studentsRepository->find($mark->getStudentId());
+            $subject = $this->subjectsRepository->find($mark->getSubjectId());
+
+            $result[] = [
+                'id' => $mark->getId(),
+                'mark' => $mark->getMark(),
+                'date' => $mark->getDate(),
+                'student' => [
+                    'id' => $student->getId(),
+                    'name' => $student->getName(),
+                ],
+                'subject' => [
+                    'id' => $subject->getId(),
+                    'name' => $subject->getName(),
+                ]
+            ];
+        }
+        return $this->json($result);
     }
 }

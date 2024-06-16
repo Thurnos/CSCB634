@@ -64,4 +64,13 @@ class StudentsRepository extends ServiceEntityRepository
         ->getQuery()
         ->getResult();
     }
+
+    public function findByEmail(string $email): Students
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s.email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

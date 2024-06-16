@@ -58,4 +58,15 @@ class GradesRepository extends ServiceEntityRepository
         ->getQuery()
         ->getResult();
     }
+    public function findByStudentId(int $studentId): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT g FROM App\Entity\Grades g
+            WHERE JSON_CONTAINS(g.student_ids, :studentId, \'$\') = 1'
+        )->setParameter('studentId', json_encode($studentId));
+
+        return $query->getResult();
+    }
 }

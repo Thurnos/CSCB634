@@ -5,6 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Users;
@@ -62,7 +63,7 @@ class UsersController extends AbstractController
         $password = $data['password'] ?? '';
 
         if (empty($username) || empty($password)) {
-            return new JsonResponse(['error' => 'Invalid credentials'], JsonResponse::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error' => 'Username or password is missing'], JsonResponse::HTTP_BAD_REQUEST);
         }
 
         $user = $this->entityManager->getRepository(Users::class)->findOneBy(['username' => $username]);
@@ -72,12 +73,15 @@ class UsersController extends AbstractController
         }
 
         if (!$this->passwordHasher->isPasswordValid($user, $password)) {
-            return new JsonResponse(['error' => 'Invalid password'], JsonResponse::HTTP_UNAUTHORIZED);
+            return new JsonResponse(['error' => 'Incorrect password'], JsonResponse::HTTP_UNAUTHORIZED);
         }
 
         return new JsonResponse([
             'success' => 'Login successful',
-            'role' => $user->getRole()
+            'role' => $user->getRole(),
+            'username' => $user->getUsername(),
+            'id' => $user->getId(),
+            'email' => $user->getEmail(),
         ], JsonResponse::HTTP_OK);
     }
 
@@ -107,6 +111,28 @@ class UsersController extends AbstractController
         return new JsonResponse(['success' => 'User created successfully'], JsonResponse::HTTP_CREATED);
     }
 
+    #[Route('/users/edit/{id}', name: 'users_edit',methods: ['PUT'])]
+    public function edit(Request $request, int $id): Response
+    {
+        $existingUser = $this->entityManager->getRepository(Users::class)->find($id);
+
+        if (!$existingUser)
+            return $this->json(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+
+
+        $data = json_decode($request->getContent(), true);
+        $existingUser->setUsername($data['username'] ?? $existingUser->getUsername());
+
+
+        if(isset($data['password']) && $data['password']){
+            $hashedPassword = $this->passwordHasher->hashPassword($existingUser, $data['password']);
+            $existingUser->setPassword($hashedPassword);
+        }
+
+        $this->entityManager->flush();
+
+        return $this->json(['message' => 'User updated successfully']);
+    }
     #[Route('/users/delete/{id}', name: 'users_delete')]
     public function delete(int $id): JsonResponse
     {
