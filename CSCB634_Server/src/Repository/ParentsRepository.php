@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Parents;
+use App\Entity\Students;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -40,4 +41,12 @@ class ParentsRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function findByEmail(string $email): Parents
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

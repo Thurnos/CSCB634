@@ -273,6 +273,7 @@
       <argument type="service" id="App\Repository\SubjectsRepository"/>
       <argument type="service" id="App\Repository\TeachersRepository"/>
       <argument type="service" id="App\Repository\ParentsRepository"/>
+      <argument type="service" id="App\Repository\SchoolsRepository"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.jUv.zyj.App\Controller\PrincipalsController"/>
       </call>
@@ -300,6 +301,9 @@
       <tag name="container.service_subscriber"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <argument type="service" id="App\Repository\ScheduleRepository"/>
+      <argument type="service" id="App\Repository\SubjectsRepository"/>
+      <argument type="service" id="App\Repository\TeachersRepository"/>
+      <argument type="service" id="App\Repository\StudentsRepository"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.jUv.zyj.App\Controller\ScheduleController"/>
       </call>
@@ -321,6 +325,8 @@
       <argument type="service" id="App\Repository\ScheduleRepository"/>
       <argument type="service" id="App\Repository\ParentsRepository"/>
       <argument type="service" id="App\Repository\SchoolsRepository"/>
+      <argument type="service" id="App\Repository\SubjectsRepository"/>
+      <argument type="service" id="App\Repository\TeachersRepository"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.jUv.zyj.App\Controller\StudentsController"/>
       </call>

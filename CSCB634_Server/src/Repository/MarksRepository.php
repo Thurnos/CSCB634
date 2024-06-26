@@ -49,4 +49,20 @@ class MarksRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findBySchoolId(int $schoolId): array
+    {
+        return $this->createQueryBuilder('m')
+            ->where('m.school_id = :schoolId')
+            ->setParameter('schoolId', $schoolId)
+            ->getQuery()
+            ->getResult();
+    }
+    public function findBySubjectId(int $subjectId): array
+    {
+        return $this->createQueryBuilder('m')
+            ->where('m.subject_id = :studentId')
+            ->setParameter('studentId', $subjectId)
+            ->getQuery()
+            ->getResult();
+    }
 }

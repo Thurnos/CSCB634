@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Students;
 use App\Entity\Teachers;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -48,5 +49,13 @@ class TeachersRepository extends ServiceEntityRepository
         ->setParameter('schoolId', $schoolId)
         ->getQuery()
         ->getResult();
+    }
+    public function findByEmail(string $email): Teachers
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

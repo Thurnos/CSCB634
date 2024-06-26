@@ -75,8 +75,50 @@ class TeachersController extends AbstractController
         if (!$teacher) {
             return $this->json(['message' => 'Teacher not found'], Response::HTTP_NOT_FOUND);
         }
+        $result = [];
 
-        return $this->json($teacher);
+            $school = $this->schoolsRepository->find($teacher->getSchoolId());
+            $result[] = [
+                'id' => $id,
+                'name' => $teacher->getName(),
+                'school' => [
+                    'id' => $teacher->getSchoolId(),
+                    'name' => $school ? $school->getName() : ''
+                ],
+                'subjects' => json_decode($this->getSubjects($id)->getContent(), true),
+                'grades' => json_decode($this->getGrades($id)->getContent(), true),
+                'qualifications' => json_decode($this->getQualifications($id)->getContent(), true),
+
+            ];
+        return $this->json($result);
+    }
+
+    #[Route('/teachers/getTeacherByEmail/{email}', name: 'teachers_getTeacherByEmail')]
+    public function getTeacherByEmail(string $email): Response
+    {
+        $teacher = $this->teachersRepository->findByEmail($email);
+
+        if (!$teacher)
+            return $this->json(['message' => 'Teacher not found'], Response::HTTP_NOT_FOUND);
+
+        $result = [];
+        $teacherId = $teacher->getId();
+
+        $school = $this->schoolsRepository->find($teacher->getSchoolId());
+
+        $result[] = [
+            'id' => $teacherId,
+            'name' => $teacher->getName(),
+            'school' => [
+                'id' => $teacher->getSchoolId(),
+                'name' => $school ? $school->getName() : ''
+            ],
+            'subjects' => json_decode($this->getSubjects($teacherId)->getContent(), true),
+            'grades' => json_decode($this->getGrades($teacherId)->getContent(), true),
+            'qualifications' => json_decode($this->getQualifications($teacherId)->getContent(), true),
+
+        ];
+        return $this->json($result);
     }
 
     #[Route('/teachers/edit/{id}', name: 'teachers_edit')]
@@ -102,7 +144,6 @@ class TeachersController extends AbstractController
         return $this->json(['message' => 'Teacher updated successfully']);
     }
 
-
     #[Route('/teachers/delete/{id}', name: 'teachers_delete')]
     public function delete(int $id): Response
     {
@@ -122,6 +163,31 @@ class TeachersController extends AbstractController
     public function list(): Response
     {
         $teachers = $this->teachersRepository->findAll();
+        $result = [];
+
+        foreach ($teachers as $teacher) {
+            $school = $this->schoolsRepository->find($teacher->getSchoolId());
+            $teacherId = $teacher->getId();
+
+            $result[] = [
+                'id' => $teacherId,
+                'name' => $teacher->getName(),
+                'school' => [
+                    'id' => $teacher->getSchoolId(),
+                    'name' => $school ? $school->getName() : ''
+                ],
+                'subjects' => json_decode($this->getSubjects($teacherId)->getContent(), true),
+                'grades' => json_decode($this->getGrades($teacherId)->getContent(), true),
+                'qualifications' => json_decode($this->getQualifications($teacherId)->getContent(), true),
+
+            ];
+        }
+        return $this->json($result);
+    }
+    #[Route('/teachers/listBySchool/{id}', name: 'teachers_listBySchool')]
+    public function listBySchool(int $id): Response
+    {
+        $teachers = $this->teachersRepository->findBySchoolId($id);
         $result = [];
 
         foreach ($teachers as $teacher) {
@@ -260,11 +326,11 @@ class TeachersController extends AbstractController
         $results = [];
        
         foreach ($gradeIds as $gradeId) {
-            $grade = $this->subjectsRepository->find($gradeId);
+            $grade = $this->gradesRepository->find($gradeId);
             if($grade) {
                 $results[] = [
                     'id' => $gradeId,
-                    'name' => $grade->getName()
+                    'name' => $grade->getGrade()
                 ];
             }
         }

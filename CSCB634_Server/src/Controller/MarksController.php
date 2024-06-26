@@ -55,7 +55,27 @@ class MarksController extends AbstractController
             return $this->json(['message' => 'Mark not found'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json($mark);
+        $result = [];
+        $student = $this->studentsRepository->find($mark->getStudentId());
+        $subject = $this->subjectsRepository->find($mark->getSubjectId());
+
+            $result[] = [
+                'id' => $mark->getId(),
+                'mark' => $mark->getMark(),
+                'date' => $mark->getDate(),
+                'student' => [
+                    'id' => $student->getId(),
+                    'name' => $student->getName(),
+                    'number' => $student->getNumber(),
+                    'email' => $student->getEmail(),
+                ],
+                'subject' => [
+                    'id' => $subject->getId(),
+                    'name' => $subject->getName(),
+                    'school' => $subject->getSchoolId()
+                ]
+            ];
+        return $this->json($result);
     }
 
     #[Route('/marks/edit/{id}', name: 'marks_edit')]
@@ -155,6 +175,7 @@ class MarksController extends AbstractController
         }
         return $this->json($result);
     }
+
     #[Route('/marks/subject/list/{id}', name: 'marks_subject_list')]
     public function subjectMarksList(int $id): Response
     {

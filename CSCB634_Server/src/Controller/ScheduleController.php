@@ -4,28 +4,137 @@ namespace App\Controller;
 
 use App\Entity\Schedule;
 use App\Repository\ScheduleRepository;
+use App\Repository\StudentsRepository;
+use App\Repository\SubjectsRepository;
+use App\Repository\TeachersRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ScheduleController extends AbstractController
 {
     private $entityManager;
     private $scheduleRepository;
+    private $subjectsRepository;
+    private $teachersRepository;
+    private $studentsRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, ScheduleRepository $scheduleRepository)
+    public function __construct(EntityManagerInterface $entityManager, ScheduleRepository $scheduleRepository,SubjectsRepository $subjectsRepository,TeachersRepository $teachersRepository,StudentsRepository $studentsRepository)
     {
         $this->entityManager = $entityManager;
         $this->scheduleRepository = $scheduleRepository;
+        $this->subjectsRepository = $subjectsRepository;
+        $this->teachersRepository = $teachersRepository;
+        $this->studentsRepository = $studentsRepository;
     }
 
     #[Route('/schedule/list', name: 'schedule_list')]
     public function list(): JsonResponse
     {
         $schedules = $this->scheduleRepository->findAll();
-        return $this->json($schedules);
+
+        $result = [];
+        foreach ($schedules as $schedule){
+            $teacher = null;
+            $student = null;
+            if($schedule->getTeacherId())
+                $teacher =$this->teachersRepository->find($schedule->getTeacherId());
+            else if($schedule->getStudentId())
+                $student = $this->studentsRepository->find($schedule->getStudentId());
+
+            $getSubjectsForDay = function($subjectIds) {
+                $subjects = array_map(function($subjectId) {
+                    return $this->subjectsRepository->find($subjectId);
+                }, $subjectIds);
+
+                // Filter out any null values in case a subject was not found
+                $subjects = array_filter($subjects);
+
+                // Format the subjects
+                return array_map(function($subject) {
+                    return [
+                        'id' => $subject->getId(),
+                        'name' => $subject->getName()
+                    ];
+                }, $subjects);
+            };
+
+            $result[] = [
+                'id' => $schedule->getId(),
+                'school_id' => $schedule->getSchoolId(),
+                'student'=>$student ? [
+                    'id'=>$student->getId(),
+                    'name'=>$student->getName(),
+                ] : null,
+                'teacher'=>$teacher ? [
+                    'id'=>$teacher->getId(),
+                    'name'=>$teacher->getName(),
+                ] : null,
+                'monday'=>$getSubjectsForDay($schedule->getMonday()),
+                'tuesday'=>$getSubjectsForDay($schedule->getTuesday()),
+                'wednesday'=>$getSubjectsForDay($schedule->getWednesday()),
+                'thursday'=>$getSubjectsForDay($schedule->getThursday()),
+                'friday' =>$getSubjectsForDay($schedule->getFriday())
+                ];
+
+        }
+        return $this->json($result);
+    }
+
+    #[Route('/schedule/listBySchool/{id}', name: 'schedule_listBySchool')]
+    public function listBySchool(int $id): JsonResponse
+    {
+        $schedules = $this->scheduleRepository->findBySchoolId($id);
+
+        $result = [];
+        foreach ($schedules as $schedule){
+            $teacher = null;
+            $student = null;
+            if($schedule->getTeacherId())
+                $teacher =$this->teachersRepository->find($schedule->getTeacherId());
+            else if($schedule->getStudentId())
+                $student = $this->studentsRepository->find($schedule->getStudentId());
+
+            $getSubjectsForDay = function($subjectIds) {
+                $subjects = array_map(function($subjectId) {
+                    return $this->subjectsRepository->find($subjectId);
+                }, $subjectIds);
+
+                // Filter out any null values in case a subject was not found
+                $subjects = array_filter($subjects);
+
+                // Format the subjects
+                return array_map(function($subject) {
+                    return [
+                        'id' => $subject->getId(),
+                        'name' => $subject->getName()
+                    ];
+                }, $subjects);
+            };
+
+            $result[] = [
+                'id' => $schedule->getId(),
+                'school_id' => $schedule->getSchoolId(),
+                'student'=>$student ? [
+                    'id'=>$student->getId(),
+                    'name'=>$student->getName(),
+                ] : null,
+                'teacher'=>$teacher ? [
+                    'id'=>$teacher->getId(),
+                    'name'=>$teacher->getName(),
+                ] : null,
+                'monday'=>$getSubjectsForDay($schedule->getMonday()),
+                'tuesday'=>$getSubjectsForDay($schedule->getTuesday()),
+                'wednesday'=>$getSubjectsForDay($schedule->getWednesday()),
+                'thursday'=>$getSubjectsForDay($schedule->getThursday()),
+                'friday' =>$getSubjectsForDay($schedule->getFriday())
+            ];
+
+        }
+        return $this->json($result);
     }
 
     #[Route('/schedule/get/{id}', name: 'schedule_get')]

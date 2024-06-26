@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Principals;
 use App\Repository\PrincipalsRepository;
+use App\Repository\SchoolsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\TeachersRepository;
 use App\Repository\StudentsRepository;
@@ -22,9 +23,9 @@ class PrincipalsController extends AbstractController
     private $subjectsRepository;
     private $teachersRepository;
     private $parentsRepository;
-
+    private $schoolsRepository;
     public function __construct(EntityManagerInterface $entityManager, PrincipalsRepository $principalsRepository,
-    StudentsRepository $studentsRepository, SubjectsRepository $subjectsRepository, TeachersRepository $teachersRepository, ParentsRepository $parentsRepository)
+    StudentsRepository $studentsRepository, SubjectsRepository $subjectsRepository, TeachersRepository $teachersRepository, ParentsRepository $parentsRepository,SchoolsRepository $schoolsRepository)
     {
         $this->entityManager = $entityManager;
         $this->principalsRepository = $principalsRepository;
@@ -32,6 +33,7 @@ class PrincipalsController extends AbstractController
         $this->subjectsRepository = $subjectsRepository;
         $this->teachersRepository = $teachersRepository;
         $this->parentsRepository = $parentsRepository;
+        $this->schoolsRepository = $schoolsRepository;
     }
 
     #[Route('/principals/add', name: 'principals_add')]
@@ -61,7 +63,27 @@ class PrincipalsController extends AbstractController
 
         return $this->json($principal);
     }
+    #[Route('/principals/getPrincipalByEmail/{email}', name: 'principals_getPrincipalByEmail')]
+    public function getPrincipalByEmail(string $email): Response
+    {
+        $principal = $this->principalsRepository->findByEmail($email);
 
+        if (!$principal)
+            return $this->json(['message' => 'Principal not found'], Response::HTTP_NOT_FOUND);
+
+        $school = $this->schoolsRepository->find($principal->getSchoolId());
+        $result = [
+            'id' => $principal->getId(),
+            'name' => $principal->getName(),
+            'email' => $principal->getEmail(),
+            'school' => [
+                'id' => $school->getId(),
+                'name' => $school->getName(),
+            ],
+        ];
+
+        return $this->json($result);
+    }
     #[Route('/principals/edit/{id}', name: 'principals_edit')]
     public function edit(Request $request, int $id): Response
     {

@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Attendance;
 use App\Repository\AttendanceRepository;
+use App\Repository\StudentsRepository;
+use App\Repository\SubjectsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,11 +16,15 @@ class AttendanceController extends AbstractController
 {
     private $entityManager;
     private $attendanceRepository;
+    private $studentsRepository;
+    private $subjectsRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, AttendanceRepository $attendanceRepository)
+    public function __construct(EntityManagerInterface $entityManager, AttendanceRepository $attendanceRepository,StudentsRepository $studentsRepository,SubjectsRepository $subjectsRepository)
     {
         $this->entityManager = $entityManager;
         $this->attendanceRepository = $attendanceRepository;
+        $this->studentsRepository = $studentsRepository;
+        $this->subjectsRepository = $subjectsRepository;
     }
 
     #[Route('/attendance/add', name: 'attendance_add')]
@@ -47,7 +53,23 @@ class AttendanceController extends AbstractController
             return $this->json(['message' => 'Attendance record not found'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json($attendance);
+        $subject = $this->subjectsRepository->find($attendance->getSubjectId());
+        $student = $this->studentsRepository->find($attendance->getStudentId());
+
+        $result[] = [
+            'id' => $attendance->getId(),
+            'date' => $attendance->getDate(),
+            'status' => $attendance->getStatus(),
+            'subject' => [
+                'id' => $subject->getId(),
+                'name' => $subject ? $subject->getName() : ''
+            ],
+            'student' => [
+                'id' => $student->getId(),
+                'name' => $student ? $student->getName() : ''
+            ]
+        ];
+        return $this->json($result);
     }
 
     #[Route('/attendance/edit/{id}', name: 'attendance_edit')]
@@ -90,8 +112,76 @@ class AttendanceController extends AbstractController
     public function list(): Response
     {
         $attendanceRecords = $this->attendanceRepository->findAll();
+        $result = [];
 
-        return $this->json($attendanceRecords);
+        foreach ($attendanceRecords as $attendance) {
+            $subject = $this->subjectsRepository->find($attendance->getSubjectId());
+            $student = $this->studentsRepository->find($attendance->getStudentId());
+
+            $result[] = [
+                'id' => $attendance->getId(),
+                'date' => $attendance->getDate(),
+                'status' => $attendance->getStatus(),
+                'subject' => [
+                    'id' => $subject->getId(),
+                    'name' => $subject ? $subject->getName() : '',
+                    'school'=>$subject ? $subject->getSchoolId() : ''
+                ],
+                'student' => [
+                    'id' => $student->getId(),
+                    'name' => $student ? $student->getName() : ''
+                ]
+            ];
+        }
+        return $this->json($result);
+    }
+    #[Route('/attendance/student/list/{id}', name: 'attendance_student_list')]
+    public function getAttendacesForStudent(int $id): Response
+    {
+        $attendanceRecords = $this->attendanceRepository->findByStudentId($id);
+        $result = [];
+
+        foreach ($attendanceRecords as $attendance) {
+            $subject = $this->subjectsRepository->find($attendance->getSubjectId());
+            $student = $this->studentsRepository->find($attendance->getStudentId());
+
+            $result[] = [
+                'id' => $attendance->getId(),
+                'date' => $attendance->getDate(),
+                'status' => $attendance->getStatus(),
+                'subject' => [
+                    'id' => $subject->getId(),
+                    'name' => $subject ? $subject->getName() : ''
+                ],
+            ];
+        }
+        return $this->json($result);
+    }
+    #[Route('/attendance/subject/list/{id}', name: 'attendance_subject_list')]
+    public function getAttendancesForSubject(int $id): Response
+    {
+        $attendanceRecords = $this->attendanceRepository->findBySubjectId($id);
+        $result = [];
+
+        foreach ($attendanceRecords as $attendance) {
+            $subject = $this->subjectsRepository->find($attendance->getSubjectId());
+            $student = $this->studentsRepository->find($attendance->getStudentId());
+
+            $result[] = [
+                'id' => $attendance->getId(),
+                'date' => $attendance->getDate(),
+                'status' => $attendance->getStatus(),
+                'subject' => [
+                    'id' => $subject->getId(),
+                    'name' => $subject ? $subject->getName() : ''
+                ],
+                'student' => [
+                    'id' => $student->getId(),
+                    'name' => $student ? $student->getName() : ''
+                ]
+            ];
+        }
+        return $this->json($result);
     }
 }
 

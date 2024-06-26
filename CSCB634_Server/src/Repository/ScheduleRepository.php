@@ -41,13 +41,13 @@ class ScheduleRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    public function findByStudentId(int $studentId): array
+    public function findByStudentId(int $studentId): Schedule
     {
         return $this->createQueryBuilder('s')
             ->where('s.student_id = :studentId')
             ->setParameter('studentId', $studentId)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
 
     public function findByTeacherId(int $teacherId): array

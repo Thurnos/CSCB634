@@ -80,73 +80,82 @@ return [
                     .'|rincipals/(?'
                         .'|get(?'
                             .'|P(?'
-                                .'|rincipal/([^/]++)(*:650)'
-                                .'|arents/([^/]++)(*:673)'
+                                .'|rincipal(?'
+                                    .'|/([^/]++)(*:653)'
+                                    .'|ByEmail/([^/]++)(*:677)'
+                                .')'
+                                .'|arents/([^/]++)(*:701)'
                             .')'
                             .'|S(?'
-                                .'|tudents/([^/]++)(*:702)'
-                                .'|ubjects/([^/]++)(*:726)'
+                                .'|tudents/([^/]++)(*:730)'
+                                .'|ubjects/([^/]++)(*:754)'
                             .')'
-                            .'|Teachers/([^/]++)(*:752)'
+                            .'|Teachers/([^/]++)(*:780)'
                         .')'
-                        .'|edit/([^/]++)(*:774)'
-                        .'|delete/([^/]++)(*:797)'
+                        .'|edit/([^/]++)(*:802)'
+                        .'|delete/([^/]++)(*:825)'
                     .')'
                 .')'
                 .'|/qualifications/(?'
-                    .'|edit/([^/]++)(*:839)'
-                    .'|delete/([^/]++)(*:862)'
+                    .'|edit/([^/]++)(*:867)'
+                    .'|delete/([^/]++)(*:890)'
                 .')'
-                .'|/roles/getRole/([^/]++)(*:894)'
+                .'|/roles/getRole/([^/]++)(*:922)'
                 .'|/s(?'
                     .'|ch(?'
                         .'|edule/(?'
-                            .'|get/([^/]++)(*:933)'
-                            .'|edit/([^/]++)(*:954)'
-                            .'|delete/([^/]++)(*:977)'
+                            .'|listBySchool/([^/]++)(*:970)'
+                            .'|get/([^/]++)(*:990)'
+                            .'|edit/([^/]++)(*:1011)'
+                            .'|delete/([^/]++)(*:1035)'
                         .')'
                         .'|ools/(?'
-                            .'|getSchool/([^/]++)(*:1012)'
-                            .'|edit/([^/]++)(*:1034)'
-                            .'|delete/([^/]++)(*:1058)'
+                            .'|getSchool/([^/]++)(*:1071)'
+                            .'|edit/([^/]++)(*:1093)'
+                            .'|delete/([^/]++)(*:1117)'
                         .')'
                     .')'
                     .'|tudents/(?'
                         .'|getS(?'
-                            .'|tudent/([^/]++)(*:1102)'
-                            .'|chedule/([^/]++)(*:1127)'
+                            .'|tudent(?'
+                                .'|/([^/]++)(*:1164)'
+                                .'|ByEmail/([^/]++)(*:1189)'
+                            .')'
+                            .'|chedule/([^/]++)(*:1215)'
                         .')'
-                        .'|edit/([^/]++)(*:1150)'
-                        .'|delete/([^/]++)(*:1174)'
+                        .'|edit/([^/]++)(*:1238)'
+                        .'|delete/([^/]++)(*:1262)'
+                        .'|listBySchool/([^/]++)(*:1292)'
                     .')'
                     .'|ubjects/(?'
-                        .'|edit/([^/]++)(*:1208)'
-                        .'|delete/([^/]++)(*:1232)'
-                        .'|school/([^/]++)(*:1256)'
+                        .'|edit/([^/]++)(*:1326)'
+                        .'|delete/([^/]++)(*:1350)'
+                        .'|school/([^/]++)(*:1374)'
                     .')'
                 .')'
                 .'|/teachers/(?'
                     .'|get(?'
                         .'|Teacher(?'
-                            .'|/([^/]++)(*:1305)'
-                            .'|ByEmail/([^/]++)(*:1330)'
+                            .'|/([^/]++)(*:1423)'
+                            .'|ByEmail/([^/]++)(*:1448)'
                         .')'
                         .'|S(?'
-                            .'|tudents/([^/]++)(*:1360)'
-                            .'|chedule/([^/]++)(*:1385)'
-                            .'|ubjects/([^/]++)(*:1410)'
+                            .'|tudents/([^/]++)(*:1478)'
+                            .'|chedule/([^/]++)(*:1503)'
+                            .'|ubjects/([^/]++)(*:1528)'
                         .')'
-                        .'|Qualifications/([^/]++)(*:1443)'
-                        .'|Grades/([^/]++)(*:1467)'
+                        .'|Qualifications/([^/]++)(*:1561)'
+                        .'|Grades/([^/]++)(*:1585)'
                     .')'
-                    .'|edit/([^/]++)(*:1490)'
-                    .'|delete/([^/]++)(*:1514)'
+                    .'|edit/([^/]++)(*:1608)'
+                    .'|delete/([^/]++)(*:1632)'
+                    .'|listBySchool/([^/]++)(*:1662)'
                 .')'
                 .'|/users/(?'
-                    .'|edit/([^/]++)(*:1547)'
-                    .'|delete/([^/]++)(*:1571)'
-                    .'|getRole/([^/]++)(*:1596)'
-                    .'|setRole/([^/]++)(*:1621)'
+                    .'|edit/([^/]++)(*:1695)'
+                    .'|delete/([^/]++)(*:1719)'
+                    .'|getRole/([^/]++)(*:1744)'
+                    .'|setRole/([^/]++)(*:1769)'
                 .')'
             .')/?$}sDu',
     ],
@@ -172,42 +181,47 @@ return [
         553 => [[['_route' => 'parents_edit', '_controller' => 'App\\Controller\\ParentsController::edit'], ['id'], null, null, false, true, null]],
         576 => [[['_route' => 'parents_delete', '_controller' => 'App\\Controller\\ParentsController::delete'], ['id'], null, null, false, true, null]],
         601 => [[['_route' => 'parent_students', '_controller' => 'App\\Controller\\ParentsController::getStudentsByParent'], ['id'], null, null, false, false, null]],
-        650 => [[['_route' => 'principals_getPrincipal', '_controller' => 'App\\Controller\\PrincipalsController::getPrincipal'], ['id'], null, null, false, true, null]],
-        673 => [[['_route' => 'principals_parents', '_controller' => 'App\\Controller\\PrincipalsController::getParents'], ['id'], null, null, false, true, null]],
-        702 => [[['_route' => 'principals_students', '_controller' => 'App\\Controller\\PrincipalsController::getStudents'], ['id'], null, null, false, true, null]],
-        726 => [[['_route' => 'principals_subjects', '_controller' => 'App\\Controller\\PrincipalsController::getSubjects'], ['id'], null, null, false, true, null]],
-        752 => [[['_route' => 'principals_teachers', '_controller' => 'App\\Controller\\PrincipalsController::getTeachers'], ['id'], null, null, false, true, null]],
-        774 => [[['_route' => 'principals_edit', '_controller' => 'App\\Controller\\PrincipalsController::edit'], ['id'], null, null, false, true, null]],
-        797 => [[['_route' => 'principals_delete', '_controller' => 'App\\Controller\\PrincipalsController::delete'], ['id'], null, null, false, true, null]],
-        839 => [[['_route' => 'qualifications_edit', '_controller' => 'App\\Controller\\QualificationsController::edit'], ['id'], null, null, false, true, null]],
-        862 => [[['_route' => 'qualifications_delete', '_controller' => 'App\\Controller\\QualificationsController::delete'], ['id'], null, null, false, true, null]],
-        894 => [[['_route' => 'roles_getRole', '_controller' => 'App\\Controller\\RolesController::getRole'], ['id'], null, null, false, true, null]],
-        933 => [[['_route' => 'schedule_get', '_controller' => 'App\\Controller\\ScheduleController::getSchedule'], ['id'], null, null, false, true, null]],
-        954 => [[['_route' => 'schedule_edit', '_controller' => 'App\\Controller\\ScheduleController::edit'], ['id'], null, null, false, true, null]],
-        977 => [[['_route' => 'schedule_delete', '_controller' => 'App\\Controller\\ScheduleController::deleteSchedule'], ['id'], null, null, false, true, null]],
-        1012 => [[['_route' => 'schools_getSchool', '_controller' => 'App\\Controller\\SchoolsController::getSchool'], ['id'], null, null, false, true, null]],
-        1034 => [[['_route' => 'schools_edit', '_controller' => 'App\\Controller\\SchoolsController::edit'], ['id'], null, null, false, true, null]],
-        1058 => [[['_route' => 'schools_delete', '_controller' => 'App\\Controller\\SchoolsController::delete'], ['id'], null, null, false, true, null]],
-        1102 => [[['_route' => 'students_getStudent', '_controller' => 'App\\Controller\\StudentsController::getStudentByEmail'], ['email'], null, null, false, true, null]],
-        1127 => [[['_route' => 'students_getSchedule', '_controller' => 'App\\Controller\\StudentsController::getSchedule'], ['id'], null, null, false, true, null]],
-        1150 => [[['_route' => 'students_get', '_controller' => 'App\\Controller\\StudentsController::edit'], ['id'], null, null, false, true, null]],
-        1174 => [[['_route' => 'students_delete', '_controller' => 'App\\Controller\\StudentsController::delete'], ['id'], null, null, false, true, null]],
-        1208 => [[['_route' => 'subject_edit', '_controller' => 'App\\Controller\\SubjectsController::edit'], ['id'], null, null, false, true, null]],
-        1232 => [[['_route' => 'subject_delete', '_controller' => 'App\\Controller\\SubjectsController::delete'], ['id'], null, null, false, true, null]],
-        1256 => [[['_route' => 'subjects_school_list', '_controller' => 'App\\Controller\\SubjectsController::getSubjectsForSchool'], ['id'], null, null, false, true, null]],
-        1305 => [[['_route' => 'teachers_getTeacher', '_controller' => 'App\\Controller\\TeachersController::getTeacher'], ['id'], null, null, false, true, null]],
-        1330 => [[['_route' => 'teachers_getTeacherByEmail', '_controller' => 'App\\Controller\\TeachersController::getTeacherByEmail'], ['email'], null, null, false, true, null]],
-        1360 => [[['_route' => 'teachers_students', '_controller' => 'App\\Controller\\TeachersController::getStudents'], ['id'], null, null, false, true, null]],
-        1385 => [[['_route' => 'teachers_getSchedule', '_controller' => 'App\\Controller\\TeachersController::getSchedule'], ['id'], null, null, false, true, null]],
-        1410 => [[['_route' => 'teachers_getSubjects', '_controller' => 'App\\Controller\\TeachersController::getSubjects'], ['id'], null, null, false, true, null]],
-        1443 => [[['_route' => 'teachers_getQualifications', '_controller' => 'App\\Controller\\TeachersController::getQualifications'], ['id'], null, null, false, true, null]],
-        1467 => [[['_route' => 'teachers_getGrades', '_controller' => 'App\\Controller\\TeachersController::getGrades'], ['id'], null, null, false, true, null]],
-        1490 => [[['_route' => 'teachers_edit', '_controller' => 'App\\Controller\\TeachersController::edit'], ['id'], null, null, false, true, null]],
-        1514 => [[['_route' => 'teachers_delete', '_controller' => 'App\\Controller\\TeachersController::delete'], ['id'], null, null, false, true, null]],
-        1547 => [[['_route' => 'users_edit', '_controller' => 'App\\Controller\\UsersController::edit'], ['id'], ['PUT' => 0], null, false, true, null]],
-        1571 => [[['_route' => 'users_delete', '_controller' => 'App\\Controller\\UsersController::delete'], ['id'], null, null, false, true, null]],
-        1596 => [[['_route' => 'users_getRole', '_controller' => 'App\\Controller\\UsersController::getRole'], ['id'], null, null, false, true, null]],
-        1621 => [
+        653 => [[['_route' => 'principals_getPrincipal', '_controller' => 'App\\Controller\\PrincipalsController::getPrincipal'], ['id'], null, null, false, true, null]],
+        677 => [[['_route' => 'principals_getPrincipalByEmail', '_controller' => 'App\\Controller\\PrincipalsController::getPrincipalByEmail'], ['email'], null, null, false, true, null]],
+        701 => [[['_route' => 'principals_parents', '_controller' => 'App\\Controller\\PrincipalsController::getParents'], ['id'], null, null, false, true, null]],
+        730 => [[['_route' => 'principals_students', '_controller' => 'App\\Controller\\PrincipalsController::getStudents'], ['id'], null, null, false, true, null]],
+        754 => [[['_route' => 'principals_subjects', '_controller' => 'App\\Controller\\PrincipalsController::getSubjects'], ['id'], null, null, false, true, null]],
+        780 => [[['_route' => 'principals_teachers', '_controller' => 'App\\Controller\\PrincipalsController::getTeachers'], ['id'], null, null, false, true, null]],
+        802 => [[['_route' => 'principals_edit', '_controller' => 'App\\Controller\\PrincipalsController::edit'], ['id'], null, null, false, true, null]],
+        825 => [[['_route' => 'principals_delete', '_controller' => 'App\\Controller\\PrincipalsController::delete'], ['id'], null, null, false, true, null]],
+        867 => [[['_route' => 'qualifications_edit', '_controller' => 'App\\Controller\\QualificationsController::edit'], ['id'], null, null, false, true, null]],
+        890 => [[['_route' => 'qualifications_delete', '_controller' => 'App\\Controller\\QualificationsController::delete'], ['id'], null, null, false, true, null]],
+        922 => [[['_route' => 'roles_getRole', '_controller' => 'App\\Controller\\RolesController::getRole'], ['id'], null, null, false, true, null]],
+        970 => [[['_route' => 'schedule_listBySchool', '_controller' => 'App\\Controller\\ScheduleController::listBySchool'], ['id'], null, null, false, true, null]],
+        990 => [[['_route' => 'schedule_get', '_controller' => 'App\\Controller\\ScheduleController::getSchedule'], ['id'], null, null, false, true, null]],
+        1011 => [[['_route' => 'schedule_edit', '_controller' => 'App\\Controller\\ScheduleController::edit'], ['id'], null, null, false, true, null]],
+        1035 => [[['_route' => 'schedule_delete', '_controller' => 'App\\Controller\\ScheduleController::deleteSchedule'], ['id'], null, null, false, true, null]],
+        1071 => [[['_route' => 'schools_getSchool', '_controller' => 'App\\Controller\\SchoolsController::getSchool'], ['id'], null, null, false, true, null]],
+        1093 => [[['_route' => 'schools_edit', '_controller' => 'App\\Controller\\SchoolsController::edit'], ['id'], null, null, false, true, null]],
+        1117 => [[['_route' => 'schools_delete', '_controller' => 'App\\Controller\\SchoolsController::delete'], ['id'], null, null, false, true, null]],
+        1164 => [[['_route' => 'students_getStudent', '_controller' => 'App\\Controller\\StudentsController::getStudent'], ['id'], null, null, false, true, null]],
+        1189 => [[['_route' => 'students_getStudent_email', '_controller' => 'App\\Controller\\StudentsController::getStudentByEmail'], ['email'], null, null, false, true, null]],
+        1215 => [[['_route' => 'students_getSchedule', '_controller' => 'App\\Controller\\StudentsController::getSchedule'], ['id'], null, null, false, true, null]],
+        1238 => [[['_route' => 'students_get', '_controller' => 'App\\Controller\\StudentsController::edit'], ['id'], null, null, false, true, null]],
+        1262 => [[['_route' => 'students_delete', '_controller' => 'App\\Controller\\StudentsController::delete'], ['id'], null, null, false, true, null]],
+        1292 => [[['_route' => 'students_listBySchool', '_controller' => 'App\\Controller\\StudentsController::listBySchool'], ['id'], null, null, false, true, null]],
+        1326 => [[['_route' => 'subject_edit', '_controller' => 'App\\Controller\\SubjectsController::edit'], ['id'], null, null, false, true, null]],
+        1350 => [[['_route' => 'subject_delete', '_controller' => 'App\\Controller\\SubjectsController::delete'], ['id'], null, null, false, true, null]],
+        1374 => [[['_route' => 'subjects_school_list', '_controller' => 'App\\Controller\\SubjectsController::getSubjectsForSchool'], ['id'], null, null, false, true, null]],
+        1423 => [[['_route' => 'teachers_getTeacher', '_controller' => 'App\\Controller\\TeachersController::getTeacher'], ['id'], null, null, false, true, null]],
+        1448 => [[['_route' => 'teachers_getTeacherByEmail', '_controller' => 'App\\Controller\\TeachersController::getTeacherByEmail'], ['email'], null, null, false, true, null]],
+        1478 => [[['_route' => 'teachers_students', '_controller' => 'App\\Controller\\TeachersController::getStudents'], ['id'], null, null, false, true, null]],
+        1503 => [[['_route' => 'teachers_getSchedule', '_controller' => 'App\\Controller\\TeachersController::getSchedule'], ['id'], null, null, false, true, null]],
+        1528 => [[['_route' => 'teachers_getSubjects', '_controller' => 'App\\Controller\\TeachersController::getSubjects'], ['id'], null, null, false, true, null]],
+        1561 => [[['_route' => 'teachers_getQualifications', '_controller' => 'App\\Controller\\TeachersController::getQualifications'], ['id'], null, null, false, true, null]],
+        1585 => [[['_route' => 'teachers_getGrades', '_controller' => 'App\\Controller\\TeachersController::getGrades'], ['id'], null, null, false, true, null]],
+        1608 => [[['_route' => 'teachers_edit', '_controller' => 'App\\Controller\\TeachersController::edit'], ['id'], null, null, false, true, null]],
+        1632 => [[['_route' => 'teachers_delete', '_controller' => 'App\\Controller\\TeachersController::delete'], ['id'], null, null, false, true, null]],
+        1662 => [[['_route' => 'teachers_listBySchool', '_controller' => 'App\\Controller\\TeachersController::listBySchool'], ['id'], null, null, false, true, null]],
+        1695 => [[['_route' => 'users_edit', '_controller' => 'App\\Controller\\UsersController::edit'], ['id'], ['PUT' => 0], null, false, true, null]],
+        1719 => [[['_route' => 'users_delete', '_controller' => 'App\\Controller\\UsersController::delete'], ['id'], null, null, false, true, null]],
+        1744 => [[['_route' => 'users_getRole', '_controller' => 'App\\Controller\\UsersController::getRole'], ['id'], null, null, false, true, null]],
+        1769 => [
             [['_route' => 'users_setRole', '_controller' => 'App\\Controller\\UsersController::changeRole'], ['id'], null, null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
